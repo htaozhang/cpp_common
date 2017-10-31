@@ -1,0 +1,50 @@
+{
+    "structs": 
+    [
+        {
+            "name": "Struct_A",
+            "members": 
+            [
+                ["bool", "m_bool"],
+                ["string", "m_string"],
+                ["int32_t", "m_int"],
+                ["uint32_t", "m_uint"],
+                ["double", "m_double"],
+                ["int8_t", "m_char"],
+                ["uint8_t", "m_uchar"],
+                ["int16_t", "m_short"],
+                ["uint16_t", "m_ushort"],
+                ["int64_t", "m_int64"],
+                ["uint64_t", "m_uint64"],
+                ["float", "m_float"],
+                ["[string]", "m_vector_string"],
+                ["[int32_t]", "m_vector_int"],
+                ["{string}", "m_map_string"],
+                ["{int}", "m_map_int"]
+            ]
+        },
+
+        {
+            "name": "Struct_B",
+            "members":
+            [
+                ["bool", "flag_"],
+                ["int", "id_"],
+                ["string", "data_"],
+                ["Struct_A", "struct_a_"]
+            ]
+        },
+
+        {
+            "name": "Struct_C",
+            "members":
+            [
+                ["bool", "flag_"],
+                ["int", "id_"],
+                ["string", "data_"],
+                ["Struct_B", "struct_b_"]
+            ]
+        }
+    ]
+}
+
