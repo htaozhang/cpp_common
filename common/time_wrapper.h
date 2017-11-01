@@ -4,18 +4,14 @@
 #ifndef __TIME_WRAPPER_H__
 #define __TIME_WRAPPER_H__
 
-
 #include <string>
-#include <cstdio> 
-#include <functional>
-#include <sys/time.h>
-#include <cinttypes>
+#include <functional>   /* function */
 
-using namespace std;
+#include <inttypes.h>
 
+#include "generic_time.h"
 
-class TimeWrapper
-{
+class TimeWrapper {
 public:
     TimeWrapper();
     explicit TimeWrapper(int64_t microSecondsSinceEpoch);
@@ -23,11 +19,11 @@ public:
 
     void Start();
     void Stop();
-    int64_t Cost(const string& unit = "ms");
+    int64_t Cost(const std::string& unit = "ms");
     int64_t MicroSecondsSinceEpoch() const;
     time_t SecondsSinceEpoch() const;
-    string ToString(const string& fmt = "%Y%m%d %H:%M:%S", bool showMicroSec = true) const;
-    time_t ToTime(const string& timeString, const string& fmt) const;
+    std::string ToString(const std::string& fmt = "%Y%m%d %H:%M:%S", bool showMicroSec = true) const;
+    time_t ToTime(const std::string& timeString, const std::string& fmt) const;
 
     static TimeWrapper Now();
     static TimeWrapper FromUnixTime(time_t t);

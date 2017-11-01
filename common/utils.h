@@ -1,6 +1,7 @@
 // Copyright(c) 2017 macrozhang 
 // All rights reserved.
 //
+
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
@@ -18,7 +19,7 @@
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wtautological-compare"
-#else
+#elif defined(__linux__)
 #pragma GCC diagnostic ignored "-Wtype-limits"
 #endif
 

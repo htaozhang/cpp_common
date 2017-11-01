@@ -1,6 +1,9 @@
 // Copytright(c) 2017 macrozhang.
 // All rights reserved.
 //
+
+#include <stdio.h>
+
 #include "time_wrapper.h"
 
 TimeWrapper::TimeWrapper()
@@ -22,7 +25,7 @@ time_t TimeWrapper::SecondsSinceEpoch() const {
     return static_cast<time_t>(microSecondsSinceEpoch_ / microSecondsPerSecond);
 }
 
-string TimeWrapper::ToString(const string& fmt/* = "%Y%m%d %H:%M:%S" */, bool showMicroSec/* = true */) const {
+std::string TimeWrapper::ToString(const std::string& fmt/* = "%Y%m%d %H:%M:%S" */, bool showMicroSec/* = true */) const {
     char buf[32] = {0};
     
     if (fmt.empty()) {
@@ -40,7 +43,7 @@ string TimeWrapper::ToString(const string& fmt/* = "%Y%m%d %H:%M:%S" */, bool sh
     return "";
 }
 
-time_t TimeWrapper::ToTime(const string& timeString, const string& fmt) const {
+time_t TimeWrapper::ToTime(const std::string& timeString, const std::string& fmt) const {
     struct tm TM;
     strptime(timeString.c_str(), fmt.c_str(), &TM);
     TM.tm_sec = 0;
@@ -72,7 +75,7 @@ void TimeWrapper::Stop() {
     gettimeofday(&stop_, NULL);
 }
 
-int64_t TimeWrapper::Cost(const string& unit/* = "s" */) {
+int64_t TimeWrapper::Cost(const std::string& unit/* = "s" */) {
     //gettimeofday(&stop_, NULL);
     Stop();
 
@@ -82,7 +85,7 @@ int64_t TimeWrapper::Cost(const string& unit/* = "s" */) {
     return (stop_.tv_sec - start_.tv_sec) + (stop_.tv_usec - start_.tv_usec) / microSecondsPerSecond;
 }
 
-void TimeWrapper::Timeit(function<void()> func) {
+void TimeWrapper::Timeit(std::function<void()> func) {
     struct timeval from;
     struct timeval to;
     gettimeofday(&from, NULL);
