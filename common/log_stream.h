@@ -21,10 +21,10 @@ public:
     template<typename T>
     Format(const char* fmt, T x);
     const char* Data() const { return data_; }
-    int Length() const { return length_; }
+    size_t Length() const { return length_; }
 private:
     char data_[32];
-    int length_;
+    size_t length_;
 };
 
 template<int SIZE = kDefaultBuffer>
@@ -41,7 +41,7 @@ public:
 
     void Add(size_t len) { cur_ += len; }
     const char* Data() const { return data_; }
-    int Length() const { return static_cast<int>(cur_ - data_); }
+    size_t Length() const { return static_cast<size_t>(cur_ - data_); }
     int Usable() { return static_cast<int>(data_ + sizeof(data_) - cur_); }
     char* Current() { return cur_; }
     void Reset() { cur_ = data_; }
@@ -79,9 +79,9 @@ public:
     LogStream& operator<<(const std::string&);
     LogStream& operator<<(const Buffer<kDefaultBuffer>&);
     LogStream& operator<<(const Format&);
-    LogStream& operator<<(const std::pair<const char*, int>&);
+    LogStream& operator<<(const std::pair<const char*, size_t>&);
 
-    void Append(const char* data, int len) { buffer_.Append(data, len); }
+    void Append(const char* data, size_t len) { buffer_.Append(data, len); }
     const Buffer<kDefaultBuffer>& Cache() const { return buffer_; }
     void Reset() { buffer_.Reset(); }
 

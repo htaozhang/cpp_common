@@ -6,8 +6,8 @@ set(COMMON_SOURCES
     log_stream.cc
     #logging.cc
     #mysql_wrapper.cc
-    redis_wrapper.cc
-    #time_wrapper.cc
+    #redis_wrapper.cc
+    time_wrapper.cc
     )
 
 ADD_LIBRARY(common STATIC ${COMMON_SOURCES})

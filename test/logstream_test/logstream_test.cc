@@ -14,7 +14,7 @@ TEST(Buffer, Append) {
 TEST(Buffer, Length) {
     Buffer<> buffer;
     buffer.Append("(null)", 6);
-    EXPECT_EQ(6, buffer.Length());
+    EXPECT_EQ(6u, buffer.Length());
 }
 
 TEST(Buffer, Usable) {

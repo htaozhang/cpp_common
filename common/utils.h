@@ -66,7 +66,7 @@ size_t ConvertToString(char buff[], T value) {
     *p = '\0';
     std::reverse(buff, p);
 
-    return p - buff;
+    return static_cast<size_t>(p - buff);
 }
 
 std::string ConvertHexToString(const void* p) {

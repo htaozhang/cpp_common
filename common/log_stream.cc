@@ -11,8 +11,8 @@
 template<typename T>
 Format::Format(const char* fmt, T x) {
     assert(std::is_arithmetic<T>::value == true);
-    length_ = snprintf(data_, sizeof(data_), fmt, x);
-    assert(static_cast<size_t>(length_) < sizeof(data_));
+    length_ = static_cast<size_t>(snprintf(data_, sizeof(data_), fmt, x));
+    assert(length_ < sizeof(data_));
 }
 
 // explcit
@@ -94,7 +94,7 @@ LogStream& LogStream::operator<<(float x) {
 
 LogStream& LogStream::operator<<(double x) {
     if (buffer_.Usable() > kMaxNumericSize)
-        buffer_.Add(snprintf(buffer_.Current(), kMaxNumericSize, "%.12g", x));
+        buffer_.Add(static_cast<size_t>(snprintf(buffer_.Current(), kMaxNumericSize, "%.12g", x)));
     return *this;
 }
 
@@ -135,7 +135,7 @@ LogStream& LogStream::operator<<(const Format& x) {
     return *this;
 }
 
-LogStream& LogStream::operator<<(const std::pair<const char*, int>& x) {
+LogStream& LogStream::operator<<(const std::pair<const char*, size_t>& x) {
     buffer_.Append(x.first, x.second);
     return *this;
 }

@@ -26,8 +26,6 @@ message(STATUS "mysqlclient library = " ${MYSQLCLIENT_LIBRARY})
 message(STATUS "tcmalloc_and_profiler library = " ${TCMALLOC_AND_PROFILER_LIBRARY})
 
 SET(CXX_FLAGS
-    -I "C:\\MinGW\\include"
-    -L "C:\\MinGW\\lib"
     #-march=native
     -D_FILE_OFFSET_BITS=64
     -O2
