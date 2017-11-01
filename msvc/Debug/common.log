@@ -1,7 +1,0 @@
-﻿  time_wrapper.cc
-d:\self\cpp_common\common\generic_time.h(55): warning C4244: 'argument': conversion from 'std::streamoff' to 'int', possible loss of data
-d:\self\cpp_common\common\time_wrapper.cc(38): error C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\time.h(495): note: see declaration of 'gmtime'
-  log_stream.cc
-d:\self\cpp_common\common\utils.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
-  Generating Code...
