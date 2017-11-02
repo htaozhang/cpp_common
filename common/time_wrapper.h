@@ -5,7 +5,7 @@
 #define __TIME_WRAPPER_H__
 
 #include <string>
-#include <functional>   /* function */
+#include <functional>   // function
 
 #include <inttypes.h>
 

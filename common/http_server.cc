@@ -149,14 +149,14 @@ void HttpResponse::Unimplemented(HttpResponse* response) {
 /// HttpServer
 ///
 HttpServer::HttpServer(int16_t port) {
-    bzero(&addr_, sizeof(addr_));
+    memset(&addr_, 0, sizeof(addr_));
     addr_.sin_family = AF_INET;
     addr_.sin_addr.s_addr = htonl(INADDR_ANY);
     addr_.sin_port = htons(port);
 }
 
 HttpServer::HttpServer(const string& ip, int16_t port) {
-    bzero(&addr_, sizeof(addr_));
+    memset(&addr_, 0, sizeof(addr_));
     addr_.sin_family = AF_INET;
     inet_pton(AF_INET, ip.c_str(), &addr_.sin_addr);
     addr_.sin_port = htons(port);

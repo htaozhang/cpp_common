@@ -2,17 +2,15 @@
 // All rights reserved.          
 //                               
 //                               
-
-#include "logging.h"             
+#include <utility>  // pair
 
 #include <stdio.h>  // fflush, fwrite
-#include <string.h> // strlen, strerror_r 
+#include <string.h> // strlen, strerror_r/strerror_s 
 #include <stdlib.h> // abort
-#include <time.h>   // gmtime_r
 #include <assert.h>
-#include <error.h>  // errno
+#include <errno.h>  // errno
 
-#include <utility>  // pair
+#include "logging.h"             
 
 typedef std::pair<const char*, int> PAIR;
 
@@ -34,7 +32,7 @@ void DefaultFlush() {
 
 Logging::OutputFunc GlobalOutput = DefaultOutput;
 Logging::FlushFunc GlobalFlush = DefaultFlush;
-Logging::Level GlobalLevel = Logging::INFO;
+Logging::Level GlobalLevel = Logging::L_INFO;
 
 const char* LevelName[Logging::LEVELS_NUM] 
     = { "TRACE ", "DEBUG ", "INFO  ", "WARN  ", "ERROR ", "FATAL " };
@@ -56,7 +54,7 @@ Logging::SourceFile::SourceFile(const char* filename)
 /// class Logging
 ///
 Logging::Logging(SourceFile file, int line) 
-    : core_(INFO, file, line, 0) {
+    : core_(L_INFO, file, line, 0) {
 
 }                      
 
@@ -71,14 +69,14 @@ Logging::Logging(SourceFile file, int line, Level level, const char* func)
 }
 
 Logging::Logging(SourceFile file, int line, bool abort) 
-    : core_(abort ? FATAL : ERROR, file, line, errno) {
+    : core_(abort ? L_FATAL : L_ERROR, file, line, errno) {
 
 }                                               
 
 Logging::~Logging() {                           
     core_.Over();
     GlobalOutput(Stream().Cache().Data(), Stream().Cache().Length());
-    if (core_.level_ == FATAL) {
+    if (core_.level_ == L_FATAL) {
         GlobalFlush();
         abort();
     }
@@ -113,7 +111,7 @@ Logging::Core::Core(Level level, SourceFile file, int line, int errnum)
       level_(level),
       file_(file),
       line_(line) {
-    // time 
+    // time
     time_t seconds = time_.SecondsSinceEpoch();
     int microseconds = static_cast<int>(time_.MicroSecondsSinceEpoch() % TimeWrapper::microSecondsPerSecond);
     
@@ -135,7 +133,7 @@ Logging::Core::Core(Level level, SourceFile file, int line, int errnum)
 
     // error msg
     if (errnum != 0) {
-        stream_ << strerror_r(errnum, _terror, sizeof _terror) << " (errno=" << errnum << ") ";
+        stream_ << strerror_r(errnum, _terror, sizeof(_terror)) << " (errno=" << errnum << ") ";
     }
 }
 

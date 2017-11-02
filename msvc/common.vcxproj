@@ -71,6 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>commond</TargetName>
+    <OutDir>$(SolutionDir)$(SolutionName)\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)tmp\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -78,6 +80,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -114,13 +118,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\generic_socket.h" />
     <ClInclude Include="..\common\generic_time.h" />
+    <ClInclude Include="..\common\http_server.h" />
+    <ClInclude Include="..\common\logging.h" />
     <ClInclude Include="..\common\log_stream.h" />
     <ClInclude Include="..\common\noncopyable.h" />
     <ClInclude Include="..\common\time_wrapper.h" />
     <ClInclude Include="..\common\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\http_server.cc" />
+    <ClCompile Include="..\common\logging.cc" />
     <ClCompile Include="..\common\log_stream.cc" />
     <ClCompile Include="..\common\time_wrapper.cc" />
   </ItemGroup>

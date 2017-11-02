@@ -11,19 +11,12 @@
 
 #include <iostream>
 #include <sstream>
-#include <iomanip>  /* std::get_time */
+#include <iomanip>  // std::get_time
 
-#define WIN32_LEAN_AND_MEAN
 #include <time.h>
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <winsock2.h>
-
-/*
-typedef struct timeval {
-long tv_sec;
-long tv_usec;
-} timeval;
-*/
+#include <winsock2.h>   // struct timeval
 
 inline int gettimeofday(struct timeval * tp, struct timezone * tzp) {
     // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
@@ -45,14 +38,15 @@ inline int gettimeofday(struct timeval * tp, struct timezone * tzp) {
     return 0;
 }
 
+#define gmtime_r(x, y) gmtime_s(y, x)
 #define timegm _mkgmtime
-#define usleep Sleep
+#define usleep(x) Sleep((x) / 1000)
 
 inline char *strptime(const char *s, const char *format, struct tm *tm) {
     std::istringstream ss(s);
     ss.imbue(std::locale(setlocale(LC_ALL, NULL)));
     ss >> std::get_time(tm, format);
-    return (ss.fail() ? NULL : const_cast<char*>(s + ss.tellg()));
+    return (ss.fail() ? NULL : const_cast<char*>(s + static_cast<int>(ss.tellg())));
 }
 
 #else

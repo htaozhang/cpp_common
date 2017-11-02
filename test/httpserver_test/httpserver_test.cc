@@ -1,8 +1,7 @@
 
-#include "http_server.cc"
+#include "http_server.h"
 
 #include <stdio.h>
-
 
 
 int OnQuery(const HttpRequest* request, HttpResponse* response) {

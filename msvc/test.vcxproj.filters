@@ -21,5 +21,11 @@
     <ClCompile Include="..\test\timewrapper_test\timewrapper_test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\logging_test\logging_test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\httpserver_test\httpserver_test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

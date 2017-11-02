@@ -19,13 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\test\httpserver_test\httpserver_test.cc" />
+    <ClCompile Include="..\test\logging_test\logging_test.cc" />
     <ClCompile Include="..\test\logstream_test\logstream_test.cc" />
     <ClCompile Include="..\test\timewrapper_test\timewrapper_test.cc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="common.vcxproj">
-      <Project>{cba26c4d-37fa-4bb3-af5b-785d08275b30}</Project>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -78,7 +75,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(SolutionName)\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)tmp\$(ProjectName)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -86,10 +86,12 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\common\;..\thirdparty\gtest\include;$(AdditionalIncludeDiretories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\thirdparty\gtest\lib;$(AdditionalLibraryDiretories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gtestd.lib;gtest_maind.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\cpp_common\Win32-Debug;..\thirdparty\gtest\lib;$(AdditionalLibraryDiretories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>commond.lib;gtestd.lib;gtest_maind.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>

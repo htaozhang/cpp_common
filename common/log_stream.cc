@@ -2,17 +2,17 @@
 // All rights reserved.
 //
 //
-#include "log_stream.h"
-#include "utils.h"
 
 #include <assert.h>
+
+#include "log_stream.h"
 
 
 template<typename T>
 Format::Format(const char* fmt, T x) {
     assert(std::is_arithmetic<T>::value == true);
-    length_ = static_cast<size_t>(snprintf(data_, sizeof(data_), fmt, x));
-    assert(length_ < sizeof(data_));
+    length_ = snprintf(data_, sizeof(data_), fmt, x);
+    assert(utils::implicit_cast<size_t>(length_) < sizeof(data_));
 }
 
 // explcit
@@ -74,7 +74,6 @@ LogStream& LogStream::operator<<(unsigned long x) {
     return *this;
 }
 
-
 LogStream& LogStream::operator<<(long long x) {
     if (buffer_.Usable() > kMaxNumericSize) 
         buffer_.Add(utils::ConvertToString(buffer_.Current(), x));
@@ -123,7 +122,6 @@ LogStream& LogStream::operator<<(const std::string& x) {
     buffer_.Append(x.c_str(), x.size());
     return *this;
 }
-
 
 LogStream& LogStream::operator<<(const Buffer<kDefaultBuffer>& x) {
     buffer_.Append(x.Data(), x.Length());

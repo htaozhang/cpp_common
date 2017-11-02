@@ -8,9 +8,15 @@
 #include "log_stream.h"
 #include "time_wrapper.h"
 
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
+    #define __thread __declspec(thread)
+    #define strerror_r(errno, buf, len) strerror_s(buf, len, errno)
+#endif
+
+
 class Logging {
 public:
-    enum Level { TRACE, DEBUG, INFO, WARN, ERROR, FATAL, LEVELS_NUM};
+    enum Level { L_TRACE, L_DEBUG, L_INFO, L_WARN, L_ERROR, L_FATAL, LEVELS_NUM };
 
     class SourceFile {
     public:
@@ -63,24 +69,24 @@ private:
 
 extern Logging::Level GlobalLevel;
 
-#define LOG_TRACE if (Logging::GetLevel() <= Logging::TRACE) \
-    Logging(__FILE__, __LINE__, Logging::TRACE, __func__).Stream()
+#define LOG_TRACE if (Logging::GetLevel() <= Logging::L_TRACE) \
+    Logging(__FILE__, __LINE__, Logging::L_TRACE, __func__).Stream()
 
-#define LOG_DEBUG if (Logging::GetLevel() <= Logging::DEBUG) \
-    Logging(__FILE__, __LINE__, Logging::DEBUG, __func__).Stream()
+#define LOG_DEBUG if (Logging::GetLevel() <= Logging::L_DEBUG) \
+    Logging(__FILE__, __LINE__, Logging::L_DEBUG, __func__).Stream()
 
-#define LOG_INFO if (Logging::GetLevel() <= Logging::INFO) \
+#define LOG_INFO if (Logging::GetLevel() <= Logging::L_INFO) \
     Logging(__FILE__, __LINE__).Stream()
 
-#define LOG_WARN Logging(__FILE__, __LINE__, Logging::WARN).Stream()
+#define LOG_WARN Logging(__FILE__, __LINE__, Logging::L_WARN).Stream()
 
-#define LOG_ERROR Logging(__FILE__, __LINE__, Logging::ERROR).Stream()
+#define LOG_ERROR Logging(__FILE__, __LINE__, Logging::L_ERROR).Stream()
 
-#define LOG_FATAL Logging(__FILE__, __LINE__, Logging::FATAL).Stream()
+#define LOG_FATAL Logging(__FILE__, __LINE__, Logging::L_FATAL).Stream()
 
 #define LOG_SYSERR Logging(__FILE__, __LINE__, false).Stream()
 
-#define LOG_SYSFATAL Logging(__FILE__, __LINE__, true).Strea()
+#define LOG_SYSFATAL Logging(__FILE__, __LINE__, true).Stream()
 
 
 #endif /* __LOGGING_H__ */

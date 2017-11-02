@@ -30,12 +30,27 @@
     <ClInclude Include="..\common\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\logging.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\http_server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\generic_socket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\log_stream.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\common\time_wrapper.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\logging.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\http_server.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

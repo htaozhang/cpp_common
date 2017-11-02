@@ -35,8 +35,9 @@ std::string TimeWrapper::ToString(const std::string& fmt/* = "%Y%m%d %H:%M:%S" *
         return buf;
     } else {
         time_t seconds = static_cast<time_t>(microSecondsSinceEpoch_ / microSecondsPerSecond);
-        struct tm *TM = gmtime(&seconds);
-        strftime(buf, sizeof(buf)-1, fmt.c_str(), TM);
+        struct tm TM;
+        gmtime_r(&seconds, &TM);
+        strftime(buf, sizeof(buf)-1, fmt.c_str(), &TM);
         return buf;
     }
 

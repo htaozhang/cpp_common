@@ -5,13 +5,14 @@
 #ifndef __LOG_STREAM_H__
 #define __LOG_STREAM_H__
 
-#include "noncopyable.h"
+#include <string>
+#include <utility>
 
 #include <stdio.h>
 #include <string.h> // memcpy() strlen()
 
-#include <string>
-#include <utility>
+#include "utils.h"
+#include "noncopyable.h"
 
 const int kDefaultBuffer = 4096;
 const int kMaximumBuffer = 4096 * 1024;
@@ -20,11 +21,12 @@ class Format {
 public:
     template<typename T>
     Format(const char* fmt, T x);
+
     const char* Data() const { return data_; }
-    size_t Length() const { return length_; }
+    int Length() const { return length_; }
 private:
     char data_[32];
-    size_t length_;
+    int length_;
 };
 
 template<int SIZE = kDefaultBuffer>
@@ -33,7 +35,7 @@ public:
     Buffer() : cur_(data_) {}
     ~Buffer() {}
     void Append(const char* from, size_t len) {
-        if (static_cast<size_t>(Usable()) > len) {
+        if (utils::implicit_cast<size_t>(Usable()) > len) {
             memcpy(cur_, from, len);
             cur_ += len;
         }
@@ -41,12 +43,12 @@ public:
 
     void Add(size_t len) { cur_ += len; }
     const char* Data() const { return data_; }
-    size_t Length() const { return static_cast<size_t>(cur_ - data_); }
+    int Length() const { return static_cast<int>(cur_ - data_); }
     int Usable() { return static_cast<int>(data_ + sizeof(data_) - cur_); }
     char* Current() { return cur_; }
     void Reset() { cur_ = data_; }
     //void Clear() { ::bzero(data_, sizeof data_); }
-    void Clear() { memset(data_, 0, sizeof data_); }
+    void Clear() { std::fill(data_, data_ + SIZE, 0); }
     const std::string ToString() const { return std::string(data_, Length()); }
     std::string ToString() { return std::string(data_, Length()); }
 

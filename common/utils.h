@@ -25,20 +25,37 @@
 
 
 namespace utils {
+#if !defined(DIGITS)
+    #define DIGITS "9876543210123456789"
+#endif
+#if !defined(DIGITSHEX)
+    #define DIGITSHEX "0123456789ABCDEF"
+#endif
+#if !defined(ZERO)
+    #define ZERO (DIGITS + 9)
+#endif
 
-const char digits[] = "9876543210123456789";
-const char digitsHex[] = "0123456789ABCDEF";
-const char* zero = digits + 9;
+//const char digits[] = "9876543210123456789";
+//const char digitsHex[] = "0123456789ABCDEF";
+//const char* zero = digits + 9;
+
+// boost::implicit_cast
+template<typename T> struct identity { typedef T type; };
+
+template <typename T>
+inline T implicit_cast(typename identity<T>::type x) {
+    return x;
+}
 
 template<typename T>
-std::string ConvertToString(T value) {
+inline std::string ConvertToString(T value) {
     std::string answer;
     T i = value;
     
     do {
         int j = static_cast<int>(i % 10);
         i /= 10;
-        answer = answer + zero[j];
+        answer = answer + ZERO[j];
     } while (i != 0);
 
     if (value < 0)
@@ -50,14 +67,14 @@ std::string ConvertToString(T value) {
 }
 
 template<typename T>
-size_t ConvertToString(char buff[], T value) {
+inline size_t ConvertToString(char buff[], T value) {
     T i = value;
     char* p = buff;
 
     do {
         int j = static_cast<int>(i % 10);
         i /= 10;
-        *p++ = zero[j];
+        *p++ = ZERO[j];
     } while (i != 0);
     
     if (value < 0)
@@ -66,17 +83,17 @@ size_t ConvertToString(char buff[], T value) {
     *p = '\0';
     std::reverse(buff, p);
 
-    return static_cast<size_t>(p - buff);
+    return p - buff;
 }
 
-std::string ConvertHexToString(const void* p) {
+inline std::string ConvertHexToString(const void* p) {
     std::string answer;
     uintptr_t v = reinterpret_cast<uintptr_t>(p);
 
     do {
         int j = static_cast<int>(v % 16);
         v /= 16;
-        answer = answer + digitsHex[j];
+        answer = answer + DIGITSHEX[j];
 
     } while (v != 0);
 
@@ -104,7 +121,7 @@ inline bool ExeShellCommand(const std::string& cmd, std::vector<std::string>& re
 }
 #endif
 
-std::vector<std::string> SplitString(const std::string& input, const std::string& separator) {
+inline std::vector<std::string> SplitString(const std::string& input, const std::string& separator) {
     std::vector<std::string> res;
     std::string::size_type last = 0;
     std::string::size_type cur = 0;
@@ -124,7 +141,7 @@ std::vector<std::string> SplitString(const std::string& input, const std::string
     return res;
 }
 
-std::string JoinString(const std::vector<std::string>& input, const std::string& separator) {
+inline std::string JoinString(const std::vector<std::string>& input, const std::string& separator) {
     std::string res;
 
     for (size_t i = 0; i < input.size(); i++) {
@@ -152,7 +169,7 @@ inline void TrimStringRight(std::string& input)
     input = input.substr(0, to + 1);
 }
 
-void TrimString(std::string& input)
+inline void TrimString(std::string& input)
 {
     // ' ', '\t', '\r', '\n', '\v', '\f'
     TrimStringLeft(input);
@@ -200,4 +217,3 @@ void TrimString(std::string& input)
 
 
 #endif /* __UTILS_H__ */
-
