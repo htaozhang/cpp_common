@@ -17,13 +17,13 @@ FIND_PACKAGE(libgtest MODULE)
 FIND_PACKAGE(libgtest_main MODULE)
 FIND_PACKAGE(libhiredis MODULE)
 FIND_PACKAGE(libmysqlclient MODULE)
-FIND_PACKAGE(libtcmalloc_and_profiler MODULE)
+#FIND_PACKAGE(libtcmalloc_and_profiler MODULE)
 
 message(STATUS "gtest library = " ${GTEST_LIBRARY})
 message(STATUS "gtest_main library = " ${GTEST_MAIN_LIBRARY})
 message(STATUS "hiredis library = " ${HIREDIS_LIBRARY})
 message(STATUS "mysqlclient library = " ${MYSQLCLIENT_LIBRARY})
-message(STATUS "tcmalloc_and_profiler library = " ${TCMALLOC_AND_PROFILER_LIBRARY})
+#message(STATUS "tcmalloc_and_profiler library = " ${TCMALLOC_AND_PROFILER_LIBRARY})
 
 SET(CXX_FLAGS
     #-march=native
@@ -34,11 +34,12 @@ SET(CXX_FLAGS
     -Wextra
     -Werror
     -Wno-unused-parameter
-    -Wconversion
+    #-Wconversion
+    -Wno-sign-conversion
     -Woverloaded-virtual
     #-Wold-style-cast
     -Wshadow
-    -std=gnu++11
+    -std=c++11
     )
 #IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 #    LIST(APPEND CXX_FLAGS -lpthread)
