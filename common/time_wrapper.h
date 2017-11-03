@@ -7,7 +7,7 @@
 #include <string>
 #include <functional>   // function
 
-#include <inttypes.h>
+#include <cinttypes>
 
 #include "generic_time.h"
 

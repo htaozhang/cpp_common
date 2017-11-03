@@ -1,8 +1,9 @@
 
+#include <cstdio>
+
 #include "http_server.h"
 
-#include <stdio.h>
-
+#include "gtest/gtest.h"
 
 int OnQuery(const HttpRequest* request, HttpResponse* response) {
     response->SetStatusCode(HttpResponse::k200Ok);
@@ -11,6 +12,7 @@ int OnQuery(const HttpRequest* request, HttpResponse* response) {
     response->SetBody("hello world.\n");
     return 0;
 }
+
 
 int main() {
     HttpServer server(23333);
@@ -25,4 +27,6 @@ int main() {
 
     return 0;
 }
+
+
 

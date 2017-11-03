@@ -39,6 +39,9 @@ namespace utils {
 //const char digitsHex[] = "0123456789ABCDEF";
 //const char* zero = digits + 9;
 
+    template<typename T = void>
+    struct Null {};
+
 // boost::implicit_cast
 template<typename T> struct identity { typedef T type; };
 
@@ -214,6 +217,5 @@ inline void TrimString(std::string& input)
 //}
 
 }
-
 
 #endif /* __UTILS_H__ */

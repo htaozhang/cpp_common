@@ -29,7 +29,7 @@ const char* HttpRequest::VersionString() const {
 bool HttpRequest::SetMethod(const char* from, const char* to) {
     assert(method_ == kInvalid);
 
-    string method(from, to);
+    std::string method(from, to);
 
     if (method == "GET")
         method_ = kGet;
@@ -73,19 +73,19 @@ const char* HttpRequest::MethodString() const {
 }
 
 void HttpRequest::SetHeader(const char* from, const char* colon, const char* to) {
-    string field(from, colon);
+    std::string field(from, colon);
     for (++colon; colon < to && isspace(*colon); colon++)
         ;
-    string value(colon, to);
+    std::string value(colon, to);
     for (; !value.empty() && isspace(value[value.size()-1]); value.resize(value.size() - 1))
         ;
 
     headers_[field] = value;
 }
 
-string HttpRequest::GetHeader(const string& field) const {
-    string result;
-    map<string, string>::const_iterator iter = headers_.find(field);
+std::string HttpRequest::GetHeader(const std::string& field) const {
+    std::string result;
+    std::map<std::string, std::string>::const_iterator iter = headers_.find(field);
     if (iter != headers_.end())
         result = iter->second;
     return result;
@@ -94,7 +94,7 @@ string HttpRequest::GetHeader(const string& field) const {
 ///
 /// HttpResponse
 ///
-void HttpResponse::AppendToBuffer(string* output) const {
+void HttpResponse::AppendToBuffer(std::string* output) const {
     char buff[32];
     snprintf(buff, sizeof buff, "HTTP/1.1 %d ", statuscode_);
     output->append(buff);
@@ -109,7 +109,7 @@ void HttpResponse::AppendToBuffer(string* output) const {
         output->append("Connection: Keep-Alive\r\n");
     }
 
-    for (map<string, string>::const_iterator iter = headers_.begin(); 
+    for (std::map<std::string, std::string>::const_iterator iter = headers_.begin(); 
         iter != headers_.end(); iter++) {
         output->append(iter->first);
         output->append(": ");
@@ -155,7 +155,7 @@ HttpServer::HttpServer(int16_t port) {
     addr_.sin_port = htons(port);
 }
 
-HttpServer::HttpServer(const string& ip, int16_t port) {
+HttpServer::HttpServer(const std::string& ip, int16_t port) {
     memset(&addr_, 0, sizeof(addr_));
     addr_.sin_family = AF_INET;
     inet_pton(AF_INET, ip.c_str(), &addr_.sin_addr);
@@ -164,23 +164,23 @@ HttpServer::HttpServer(const string& ip, int16_t port) {
 
 int HttpServer::Startup() {
     if ((listenfd_ = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
-        cerr << "socket error: " << strerror(errno) << endl;
+        std::cerr << "socket error: " << strerror(errno) << std::endl;
         return -1;
     }
 
     int opt = 0;
     if (setsockopt(listenfd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-        cerr << "setsockopt error: " << strerror(errno) << endl;
+        std::cerr << "setsockopt error: " << strerror(errno) << std::endl;
         return -2;
     }
 
     if (::bind(listenfd_, (struct sockaddr*)&addr_, sizeof(addr_)) < 0) {
-        cerr << "bind error: " << strerror(errno) << endl;
+        std::cerr << "bind error: " << strerror(errno) << std::endl;
         return -3;
     }
 
     if (listen(listenfd_, 5) < 0) {
-        cerr << "listen error: " << strerror(errno) << endl;
+        std::cerr << "listen error: " << strerror(errno) << std::endl;
         return -4;
     }
 
@@ -194,7 +194,7 @@ void HttpServer::Run() {
 
     while (1) {
         if ((connectfd = accept(listenfd_, (struct sockaddr*)&clientaddr, &len)) == -1) {
-            cerr << "accept error: " << strerror(errno) << endl;
+            std::cerr << "accept error: " << strerror(errno) << std::endl;
             continue;
         }
 
@@ -321,7 +321,7 @@ int HttpServer::Recv(int fd, char* buff, size_t size) {
 
 
 ssize_t HttpServer::Send(int fd, HttpResponse* response) {
-    string data;
+    std::string data;
     response->AppendToBuffer(&data);
     return send(fd, data.c_str(), data.size(), 0); 
 }

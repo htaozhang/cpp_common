@@ -2,7 +2,7 @@
 // All rights reserved.
 //
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "time_wrapper.h"
 
@@ -25,7 +25,8 @@ time_t TimeWrapper::SecondsSinceEpoch() const {
     return static_cast<time_t>(microSecondsSinceEpoch_ / microSecondsPerSecond);
 }
 
-std::string TimeWrapper::ToString(const std::string& fmt/* = "%Y%m%d %H:%M:%S" */, bool showMicroSec/* = true */) const {
+std::string TimeWrapper::ToString(
+    const std::string& fmt/* = "%Y%m%d %H:%M:%S" */, bool showMicroSec/* = true */) const {
     char buf[32] = {0};
     
     if (fmt.empty()) {
@@ -34,9 +35,8 @@ std::string TimeWrapper::ToString(const std::string& fmt/* = "%Y%m%d %H:%M:%S" *
         snprintf(buf, sizeof(buf)-1, "%" PRId64 "%.06" PRId64 "", seconds, microseconds);
         return buf;
     } else {
-        time_t seconds = static_cast<time_t>(microSecondsSinceEpoch_ / microSecondsPerSecond);
-        struct tm TM;
-        gmtime_r(&seconds, &TM);
+        std::time_t seconds = static_cast<std::time_t>(microSecondsSinceEpoch_ / microSecondsPerSecond);
+        std::tm TM = gmtime(seconds);
         strftime(buf, sizeof(buf)-1, fmt.c_str(), &TM);
         return buf;
     }
@@ -45,11 +45,11 @@ std::string TimeWrapper::ToString(const std::string& fmt/* = "%Y%m%d %H:%M:%S" *
 }
 
 time_t TimeWrapper::ToTime(const std::string& timeString, const std::string& fmt) const {
-    struct tm TM;
+    std::tm TM;
     strptime(timeString.c_str(), fmt.c_str(), &TM);
     TM.tm_sec = 0;
     //time_t result = mktime(&TM);
-    time_t result = timegm(&TM);  // UTC-0
+    std::time_t result = timegm(&TM);  // UTC-0
     return result;
 }
 
@@ -60,11 +60,11 @@ TimeWrapper TimeWrapper::Now() {
     return TimeWrapper(seconds * microSecondsPerSecond + tv.tv_usec);
 }
 
-TimeWrapper TimeWrapper::FromUnixTime(time_t t) {
+TimeWrapper TimeWrapper::FromUnixTime(std::time_t t) {
     return FromUnixTime(t, 0);
 }
 
-TimeWrapper TimeWrapper::FromUnixTime(time_t t, int64_t microSeconds) {
+TimeWrapper TimeWrapper::FromUnixTime(std::time_t t, int64_t microSeconds) {
     return TimeWrapper(static_cast<int64_t>(t) * microSecondsPerSecond + microSeconds);
 }
 

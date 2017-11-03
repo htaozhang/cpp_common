@@ -16,8 +16,6 @@
 
 #include "generic_socket.h"
 
-using namespace std;
-
 class HttpRequest {
 public:
     enum Version { kUnknown, kHttp10, kHttp11 };
@@ -34,21 +32,21 @@ public:
     const char* MethodString() const;
 
     void SetPath(const char* from, const char* to) { path_.assign(from, to); }
-    const string& GetPath() const { return path_; }
+    const std::string& GetPath() const { return path_; }
 
     void SetQuery(const char* from, const char* to) { query_.assign(from, to); }
-    const string& GetQuery() const { return query_; }
+    const std::string& GetQuery() const { return query_; }
 
     void SetHeader(const char* from, const char* colon, const char* to);
-    string GetHeader(const string& field) const;
+    std::string GetHeader(const std::string& field) const;
 
-    const map<string, string>& Headers() const { return headers_; }
+    const std::map<std::string, std::string>& Headers() const { return headers_; }
 
     static void Print(HttpRequest* request) {
         printf("%s %s%s %s\r\n", request->MethodString(), 
             request->path_.c_str(), request->query_.c_str(), request->VersionString());
-        for (map<string, string>::iterator iter = request->headers_.begin(); 
-            iter != request->headers_.end(); iter++) {
+        for (std::map<std::string, std::string>::iterator 
+            iter = request->headers_.begin(); iter != request->headers_.end(); iter++) {
             printf("%s: %s\r\n", iter->first.c_str(), iter->second.c_str());
         }
         printf("\r\n");
@@ -57,9 +55,9 @@ public:
 private:
     Version version_;
     Method method_;
-    string path_;
-    string query_;
-    map<string, string> headers_;
+    std::string path_;
+    std::string query_;
+    std::map<std::string, std::string> headers_;
 };
 
 class HttpContext {
@@ -101,37 +99,37 @@ public:
     static void Unimplemented(HttpResponse* response);
 
     void SetStatusCode(StatusCode statuscode) { statuscode_ = statuscode; }
-    void SetStatusMessage(const string& statusmessage) { statusmessage_ = statusmessage; }
+    void SetStatusMessage(const std::string& statusmessage) { statusmessage_ = statusmessage; }
     void SetClose(bool close) { close_ = close; }
-    void SetBody(const string& body) { body_ = body; }
-    void SetHeader(const string& key, const string& value) { headers_[key] = value; }
-    void SetContentType(const string& contenttype) { SetHeader("Content-Type", contenttype); }
-    void AppendToBuffer(string* output) const;
+    void SetBody(const std::string& body) { body_ = body; }
+    void SetHeader(const std::string& key, const std::string& value) { headers_[key] = value; }
+    void SetContentType(const std::string& contenttype) { SetHeader("Content-Type", contenttype); }
+    void AppendToBuffer(std::string* output) const;
     
     static void Print(HttpResponse* response) {
-       string data;
+       std::string data;
        response->AppendToBuffer(&data);
        printf("%s", data.c_str());
     }
 
 private:
     StatusCode statuscode_;
-    string statusmessage_;
-    map<string, string> headers_;
-    string body_;
+    std::string statusmessage_;
+    std::map<std::string, std::string> headers_;
+    std::string body_;
     bool close_;
 };
 
 class HttpServer {
 public:
     enum ParseRequestFlag { kRequestLine = 1, kHeader = 2, kBody = 4, kAll = 8 };
-    typedef function<int (const HttpRequest* request, HttpResponse* response)> Callback;
+    typedef std::function<int (const HttpRequest* request, HttpResponse* response)> Callback;
     
     explicit HttpServer(int16_t port);
-    HttpServer(const string& ip, int16_t port);
+    HttpServer(const std::string& ip, int16_t port);
     int Startup();
     void Run();
-    void SetCallback(const string& key, Callback callback) { callbacks_[key] = callback; }
+    void SetCallback(const std::string& key, Callback callback) { callbacks_[key] = callback; }
 
 private:
     bool Process(int fd);
@@ -142,7 +140,7 @@ private:
 private:
     struct sockaddr_in addr_;
     int listenfd_;
-    map<string, Callback> callbacks_;
+    std::map<std::string, Callback> callbacks_;
     static const int MAX_SIZE = 1024;
 };
 

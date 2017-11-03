@@ -6,14 +6,15 @@
 #ifndef __GENERIC_TIME_H__
 #define __GENERIC_TIME_H__
 
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
+#include "utils.h"
 
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
 
 #include <iostream>
 #include <sstream>
 #include <iomanip>  // std::get_time
+#include <ctime>
 
-#include <time.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winsock2.h>   // struct timeval
@@ -38,10 +39,6 @@ inline int gettimeofday(struct timeval * tp, struct timezone * tzp) {
     return 0;
 }
 
-#define gmtime_r(x, y) gmtime_s(y, x)
-#define timegm _mkgmtime
-#define usleep(x) Sleep((x) / 1000)
-
 inline char *strptime(const char *s, const char *format, struct tm *tm) {
     std::istringstream ss(s);
     ss.imbue(std::locale(setlocale(LC_ALL, NULL)));
@@ -49,10 +46,61 @@ inline char *strptime(const char *s, const char *format, struct tm *tm) {
     return (ss.fail() ? NULL : const_cast<char*>(s + static_cast<int>(ss.tellg())));
 }
 
+#define timegm _mkgmtime
+
+#define usleep(x) Sleep((x) / 1000)
+
+
 #else
 #include <sys/time.h>
 
 #endif
 
+inline utils::Null<> localtime_r(...) { return utils::Null<>(); }
+inline utils::Null<> localtime_s(...) { return utils::Null<>(); }
+inline utils::Null<> gmtime_r(...) { return utils::Null<>(); }
+inline utils::Null<> gmtime_s(...) { return utils::Null<>(); }
+
+inline std::tm localtime(std::time_t time) {
+    struct LocalTime {
+        std::time_t time_;
+        std::tm tm_;
+
+        LocalTime(std::time_t time) : time_(time) {}
+
+        bool run() { return handle(localtime_r(&time_, &tm_)); }
+        bool handle(std::tm *tm) { return tm != NULL; }
+        bool handle(utils::Null<>) { return fallback(localtime_s(&tm_, &time_)); }
+        bool fallback(int res) { return res == 0; }
+        bool fallback(utils::Null<>) {
+            std::tm *tm = std::localtime(&time_);
+            return tm == NULL ? false : (tm_ = *tm, true);
+        }
+    };
+
+    LocalTime lt(time);
+    return lt.run() ? lt.tm_ : std::tm();
+}
+
+inline std::tm gmtime(std::time_t time) {
+    struct GMTime {
+        std::time_t time_;
+        std::tm tm_;
+
+        GMTime(std::time_t time) : time_(time) {}
+
+        bool run() { return handle(gmtime_r(&time_, &tm_)); }
+        bool handle(std::tm *tm) { return tm != NULL; }
+        bool handle(utils::Null<>) { return fallback(gmtime_s(&tm_, &time_)); }
+        bool fallback(int res) { return res == 0; }
+        bool fallback(utils::Null<>) {
+            std::tm *tm = std::gmtime(&time_);
+            return tm == NULL ? false : (tm_ = *tm, true);
+        }
+    };
+
+    GMTime gt(time);
+    return gt.run() ? gt.tm_ : std::tm();
+}
 
 #endif /* __GENERIC_TIME_H__ */
