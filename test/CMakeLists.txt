@@ -6,9 +6,9 @@ set(TESTS
     #rediswrapper_test
     timewrapper_test
     #mysqlwrapper_test
-    #httpserver_test
+    httpserver_test
     logstream_test
-    #logging_test
+    logging_test
     )
 foreach (test ${TESTS})
     add_executable(${test} ./${test}/${test}.cc)

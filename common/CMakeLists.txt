@@ -2,9 +2,9 @@
 #aux_source_directory(./ COMMON_SOURCES)
 
 set(COMMON_SOURCES
-    #http_server.cc
+    http_server.cc
     log_stream.cc
-    #logging.cc
+    logging.cc
     #mysql_wrapper.cc
     #redis_wrapper.cc
     time_wrapper.cc

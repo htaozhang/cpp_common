@@ -2,4 +2,8 @@
 /tmp/*
 /msvc/Debug
 /msvc/Release
+/msvc/Win32-Debug
+/msvc/Win32-Release
+/msvc/x64-Debug
+/msvc/x64-Release
 
