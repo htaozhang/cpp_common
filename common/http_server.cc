@@ -163,6 +163,8 @@ HttpServer::HttpServer(const std::string& ip, int16_t port) {
 }
 
 int HttpServer::Startup() {
+    initsocket();
+
     if ((listenfd_ = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
         std::cerr << "socket error: " << strerror(errno) << std::endl;
         return -1;

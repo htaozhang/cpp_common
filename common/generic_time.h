@@ -66,7 +66,7 @@ inline std::tm localtime(std::time_t time) {
         std::time_t time_;
         std::tm tm_;
 
-        LocalTime(std::time_t time) : time_(time) {}
+        LocalTime(std::time_t t) : time_(t) {}
 
         bool run() { return handle(localtime_r(&time_, &tm_)); }
         bool handle(std::tm *tm) { return tm != NULL; }
@@ -87,7 +87,7 @@ inline std::tm gmtime(std::time_t time) {
         std::time_t time_;
         std::tm tm_;
 
-        GMTime(std::time_t time) : time_(time) {}
+        GMTime(std::time_t t) : time_(t) {}
 
         bool run() { return handle(gmtime_r(&time_, &tm_)); }
         bool handle(std::tm *tm) { return tm != NULL; }

@@ -68,6 +68,11 @@ inline int _inet_pton(int af, const char *src, void *dst) {
     return 0;
 }
 
+inline void initsocket() {
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2,2), &wsaData);
+}
+
 #define setsockopt _setsockopt
 #define getsockopt _getsockopt
 #define inet_ntop _inet_ntop
@@ -79,6 +84,7 @@ inline int _inet_pton(int af, const char *src, void *dst) {
 #include <netinet/in.h>
 #include <arpa/inet.h> // inet_pton()
 
+inline void initsocket() {}
 
 #endif
 
