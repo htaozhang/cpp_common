@@ -13,20 +13,16 @@ int OnQuery(const HttpRequest* request, HttpResponse* response) {
     return 0;
 }
 
-
-int main() {
-    HttpServer server(23333);
-    server.SetCallback("/query", OnQuery);
-
-    if (server.Startup()) {
-        printf("server startup failed.\n");
-        return -1;
-    }
-
-    server.Run();
-
-    return 0;
+/*
+TEST(HttpServer, Startup) {
+HttpServer server(23333);
+server.SetCallback("/query", OnQuery);
+EXPECT_TRUE(server.Startup() == 0);
+server.Run();
 }
+*/
+
+
 
 
 

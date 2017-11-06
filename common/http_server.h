@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <functional>
 
-#include <string.h>
+#include <cstring>
 
 #include "generic_socket.h"
 
@@ -42,6 +42,8 @@ public:
 
     const std::map<std::string, std::string>& Headers() const { return headers_; }
 
+    void Swap(HttpRequest& that);
+
     static void Print(HttpRequest* request) {
         printf("%s %s%s %s\r\n", request->MethodString(), 
             request->path_.c_str(), request->query_.c_str(), request->VersionString());
@@ -69,7 +71,7 @@ public:
     void Reset() {
         cursor_ = kRequestLine;
         HttpRequest dummy;
-        //request_.swap(dummy);
+        request_.Swap(dummy);
     }
     const HttpRequest& Request() const { return request_; }
     HttpRequest& Request() { return request_; }

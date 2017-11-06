@@ -15,14 +15,14 @@ INCLUDE_DIRECTORIES(./common
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
 FIND_PACKAGE(libgtest MODULE)
 FIND_PACKAGE(libgtest_main MODULE)
-FIND_PACKAGE(libhiredis MODULE)
-FIND_PACKAGE(libmysqlclient MODULE)
+#FIND_PACKAGE(libhiredis MODULE)
+#FIND_PACKAGE(libmysqlclient MODULE)
 #FIND_PACKAGE(libtcmalloc_and_profiler MODULE)
 
 message(STATUS "gtest library = " ${GTEST_LIBRARY})
 message(STATUS "gtest_main library = " ${GTEST_MAIN_LIBRARY})
-message(STATUS "hiredis library = " ${HIREDIS_LIBRARY})
-message(STATUS "mysqlclient library = " ${MYSQLCLIENT_LIBRARY})
+#message(STATUS "hiredis library = " ${HIREDIS_LIBRARY})
+#message(STATUS "mysqlclient library = " ${MYSQLCLIENT_LIBRARY})
 #message(STATUS "tcmalloc_and_profiler library = " ${TCMALLOC_AND_PROFILER_LIBRARY})
 
 SET(CXX_FLAGS

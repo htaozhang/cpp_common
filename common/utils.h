@@ -25,6 +25,7 @@
 
 
 namespace utils {
+
 #if !defined(DIGITS)
     #define DIGITS "9876543210123456789"
 #endif
@@ -35,149 +36,151 @@ namespace utils {
     #define ZERO (DIGITS + 9)
 #endif
 
-//const char digits[] = "9876543210123456789";
-//const char digitsHex[] = "0123456789ABCDEF";
-//const char* zero = digits + 9;
+    //const char digits[] = "9876543210123456789";
+    //const char digitsHex[] = "0123456789ABCDEF";
+    //const char* zero = digits + 9;
 
     template<typename T = void>
     struct Null {};
 
-// boost::implicit_cast
-template<typename T> struct identity { typedef T type; };
+    // copy boost::implicit_cast
+    template<typename T> struct identity { typedef T type; };
 
-template <typename T>
-inline T implicit_cast(typename identity<T>::type x) {
-    return x;
-}
+    template <typename T>
+    inline T implicit_cast(typename identity<T>::type x) {
+        return x;
+    }
 
-template<typename T>
-inline std::string ConvertToString(T value) {
-    std::string answer;
-    T i = value;
-    
-    do {
-        int j = static_cast<int>(i % 10);
-        i /= 10;
-        answer = answer + ZERO[j];
-    } while (i != 0);
+    template<typename T>
+    inline std::string ConvertToString(T value) {
+        //assert(std::is_arithmetic<T>::value == true);
 
-    if (value < 0)
-        answer = answer + '-';
+        std::string answer;
+        T i = value;
 
-    std::reverse(answer.begin(), answer.end());
+        do {
+            int j = static_cast<int>(i % 10);
+            i /= 10;
+            answer = answer + ZERO[j];
+        } while (i != 0);
 
-    return answer;
-}
+        if (value < 0)
+            answer = answer + '-';
 
-template<typename T>
-inline size_t ConvertToString(char buff[], T value) {
-    T i = value;
-    char* p = buff;
+        std::reverse(answer.begin(), answer.end());
 
-    do {
-        int j = static_cast<int>(i % 10);
-        i /= 10;
-        *p++ = ZERO[j];
-    } while (i != 0);
-    
-    if (value < 0)
-        *p++ = '-';
+        return answer;
+    }
 
-    *p = '\0';
-    std::reverse(buff, p);
+    template<typename T>
+    inline size_t ConvertToString(char buff[], T value) {
+        T i = value;
+        char* p = buff;
 
-    return p - buff;
-}
+        do {
+            int j = static_cast<int>(i % 10);
+            i /= 10;
+            *p++ = ZERO[j];
+        } while (i != 0);
 
-inline std::string ConvertHexToString(const void* p) {
-    std::string answer;
-    uintptr_t v = reinterpret_cast<uintptr_t>(p);
+        if (value < 0)
+            *p++ = '-';
 
-    do {
-        int j = static_cast<int>(v % 16);
-        v /= 16;
-        answer = answer + DIGITSHEX[j];
+        *p = '\0';
+        std::reverse(buff, p);
 
-    } while (v != 0);
+        return p - buff;
+    }
 
-    std::reverse(answer.begin(), answer.end());
+    inline std::string ConvertHexToString(const void* p) {
+        std::string answer;
+        uintptr_t v = reinterpret_cast<uintptr_t>(p);
 
-    return "0x" + answer;
-}
+        do {
+            int j = static_cast<int>(v % 16);
+            v /= 16;
+            answer = answer + DIGITSHEX[j];
+
+        } while (v != 0);
+
+        std::reverse(answer.begin(), answer.end());
+
+        return "0x" + answer;
+    }
 
 #ifdef __LINUX__
-inline bool ExeShellCommand(const std::string& cmd, std::vector<std::string>& res) {
-    FILE *fres = NULL;
-    char buffer[1024];
+    inline bool ExeShellCommand(const std::string& cmd, std::vector<std::string>& res) {
+        FILE *fres = NULL;
+        char buffer[1024];
 
-    if ((fres = popen(cmd.c_str(), "r")) != NULL) {
-        while (fgets(buffer, sizeof(buffer), fres) != NULL) {
-            if (buffer[strlen(buffer) - 1] == '\n')
-                buffer[strlen(buffer) - 1] = '\0';
-            res.push_back(buffer);
+        if ((fres = popen(cmd.c_str(), "r")) != NULL) {
+            while (fgets(buffer, sizeof(buffer), fres) != NULL) {
+                if (buffer[strlen(buffer) - 1] == '\n')
+                    buffer[strlen(buffer) - 1] = '\0';
+                res.push_back(buffer);
+            }
+            pclose(fres);
+            return true;
         }
-        pclose(fres);
-        return true;
-    }
 
-    return false;
-}
+        return false;
+    }
 #endif
 
-inline std::vector<std::string> SplitString(const std::string& input, const std::string& separator) {
-    std::vector<std::string> res;
-    std::string::size_type last = 0;
-    std::string::size_type cur = 0;
+    inline std::vector<std::string> SplitString(const std::string& input, const std::string& separator) {
+        std::vector<std::string> res;
+        std::string::size_type last = 0;
+        std::string::size_type cur = 0;
 
-    while (last <= input.length()) {
-        cur = input.find(separator, last);
+        while (last <= input.length()) {
+            cur = input.find(separator, last);
 
-        if (cur != std::string::npos) {
-            res.push_back(input.substr(last, cur - last));
-            last = cur + separator.length();
-        } else {
-            res.push_back(input.substr(last));
-            break;
+            if (cur != std::string::npos) {
+                res.push_back(input.substr(last, cur - last));
+                last = cur + separator.length();
+            } else {
+                res.push_back(input.substr(last));
+                break;
+            }
         }
+
+        return res;
     }
 
-    return res;
-}
+    inline std::string JoinString(const std::vector<std::string>& input, const std::string& separator) {
+        std::string res;
 
-inline std::string JoinString(const std::vector<std::string>& input, const std::string& separator) {
-    std::string res;
+        for (size_t i = 0; i < input.size(); i++) {
+            res += input[i];
+            if (i < input.size() - 1)
+                res += separator;
+        }
 
-    for (size_t i = 0; i < input.size(); i++) {
-        res += input[i];
-        if (i < input.size() - 1)
-            res += separator;
+        return res;
     }
 
-    return res;
-}
 
+    inline void TrimStringLeft(std::string& input) {
+        size_t from = 0;
+        while (from < input.length() && isspace(input[from]))
+            from++;
+        input = input.substr(from);
+    }
 
-inline void TrimStringLeft(std::string& input) {
-    size_t from = 0;
-    while (from < input.length() && isspace(input[from]))
-        from++;
-    input = input.substr(from);
-}
+    inline void TrimStringRight(std::string& input)
+    {
+        size_t to = input.length() - 1;
+        while (to >= 0 && isspace(input[to]))
+            to--;
+        input = input.substr(0, to + 1);
+    }
 
-inline void TrimStringRight(std::string& input)
-{
-    size_t to = input.length() - 1;
-    while (to >= 0 && isspace(input[to]))
-        to--;
-    input = input.substr(0, to + 1);
-}
-
-inline void TrimString(std::string& input)
-{
-    // ' ', '\t', '\r', '\n', '\v', '\f'
-    TrimStringLeft(input);
-    TrimStringRight(input);
-}
+    inline void TrimString(std::string& input)
+    {
+        // ' ', '\t', '\r', '\n', '\v', '\f'
+        TrimStringLeft(input);
+        TrimStringRight(input);
+    }
 
 
 //inline const char* trimStringLeft_SIMD(const char* p)

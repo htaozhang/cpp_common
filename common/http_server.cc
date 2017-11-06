@@ -91,6 +91,14 @@ std::string HttpRequest::GetHeader(const std::string& field) const {
     return result;
 }
 
+void HttpRequest::Swap(HttpRequest& that) {
+    std::swap(version_, that.version_);
+    std::swap(method_, that.method_);
+    path_.swap(that.path_);
+    query_.swap(that.query_);
+    headers_.swap(that.headers_);
+}
+
 ///
 /// HttpResponse
 ///

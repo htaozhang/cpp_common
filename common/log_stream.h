@@ -7,6 +7,7 @@
 
 #include <string>
 #include <utility>
+#include <algorithm> // std::fill
 
 #include <stdio.h>
 #include <string.h> // memcpy() strlen()
