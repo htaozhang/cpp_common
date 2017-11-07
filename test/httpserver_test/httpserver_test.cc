@@ -10,6 +10,7 @@ TEST(HttpContext, ParseRequest) {
     const char* from = 
         "GET /index.html HTTP/1.1\r\n"
         "Host: www.macrozhang.com\r\n"
+        "Accept-Encoding:\r\n"
         "\r\n";
 
     HttpContext context;
@@ -21,7 +22,9 @@ TEST(HttpContext, ParseRequest) {
     EXPECT_EQ(request.GetVersion(), HttpRequest::kHttp11);
     EXPECT_EQ(request.GetHeader("Host"), "www.macrozhang.com");
     EXPECT_EQ(request.GetHeader("User-Agent"), "");
+    EXPECT_EQ(request.GetHeader("Accept-Encoding"), "");
 }
+
 
 int OnQuery(const HttpRequest* request, HttpResponse* response) {
     response->SetStatusCode(HttpResponse::k200Ok);

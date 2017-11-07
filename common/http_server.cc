@@ -17,7 +17,7 @@ const char* HttpRequest::VersionString() const {
             result = "HTTP/1.0";
             break;
         case kHttp11:
-            result = "HTTO/1.1";
+            result = "HTTP/1.1";
             break;
         default:
             break;
@@ -28,7 +28,6 @@ const char* HttpRequest::VersionString() const {
 
 bool HttpRequest::SetMethod(const char* from, const char* to) {
     assert(method_ == kInvalid);
-
     std::string method(from, to);
 
     if (method == "GET")
@@ -107,7 +106,7 @@ bool HttpContext::ParseRequest(const char* from, const char* to) {
     const char* start = from;
     const char* crlf = NULL;
 
-    while (over && start < to) {
+    while (!over && start < to) {
         switch (cursor_) {
         case kRequestLine:
             crlf = std::search(start, to, "\r\n", "\r\n" + 2);
@@ -115,8 +114,8 @@ bool HttpContext::ParseRequest(const char* from, const char* to) {
                 cursor_ = kHeader;
                 start = crlf + 2;
             } else {
-                // over = true;
-                return crlf == NULL;
+                over = true;
+                //return crlf == NULL;
             }
             break;
         case kHeader:
@@ -144,8 +143,6 @@ bool HttpContext::ParseRequest(const char* from, const char* to) {
             break;
         }
     }
-
-    //HttpRequest::Print(&request_);
 
     return true;
 }
