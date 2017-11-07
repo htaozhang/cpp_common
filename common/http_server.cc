@@ -100,6 +100,88 @@ void HttpRequest::Swap(HttpRequest& that) {
 }
 
 ///
+/// HttpContext
+///
+bool HttpContext::ParseRequest(const char* from, const char* to) {
+    bool over = false;
+    const char* start = from;
+    const char* crlf = NULL;
+
+    while (over && start < to) {
+        switch (cursor_) {
+        case kRequestLine:
+            crlf = std::search(start, to, "\r\n", "\r\n" + 2);
+            if (crlf && ParseRequestLine(start, crlf)) {
+                cursor_ = kHeader;
+                start = crlf + 2;
+            } else {
+                // over = true;
+                return crlf == NULL;
+            }
+            break;
+        case kHeader:
+            if (crlf = std::search(start, to, "\r\n", "\r\n" + 2)) {
+                const char* colon = std::find(start, crlf, ':');
+                if (colon != crlf) {
+                    request_.SetHeader(start, colon, crlf);
+                } else if (request_.GetMethod() == HttpRequest::kPost) {
+                    //size = atoi(request_.GetHeader("Conten-Length").c_str());
+                    cursor_ = kBody;
+                } else {
+                    over = true;
+                    cursor_ = kAll;
+                }
+                start = crlf + 2;
+            } else {
+                over = true;
+            }
+            break;
+        case kBody:
+            //request_.SetQuery(buff, buff + len);
+            break;
+        default:
+            over = true;
+            break;
+        }
+    }
+
+    //HttpRequest::Print(&request_);
+
+    return true;
+}
+
+bool HttpContext::ParseRequestLine(const char* from, const char* to) {
+    // [method][ ][url][ ][version]
+    bool succeed = false;
+    const char* start = from;
+    const char* space = std::find(start, to, ' ');
+
+    if (space != to && request_.SetMethod(start, space)) {
+        start = space + 1;
+        space = std::find(start, to, ' ');
+        if (space != to) {
+            const char* path = std::find(start, space, '?');
+            request_.SetPath(start, path);
+            if (path != space)
+                request_.SetQuery(path, space);
+        }
+
+        start = space + 1;
+        succeed = (to - start == 8) && std::equal(start, to - 1, "HTTP/1.");
+        if (succeed) {
+            if (*(to - 1) == '0')
+                request_.SetVersion(HttpRequest::kHttp10);
+            else if (*(to - 1) == '1')
+                request_.SetVersion(HttpRequest::kHttp11);
+            else
+                succeed = false;
+        }
+    }
+
+    return succeed;
+}
+
+///
 /// HttpResponse
 ///
 void HttpResponse::AppendToBuffer(std::string* output) const {

@@ -67,7 +67,7 @@ public:
     enum ParseCursor { kRequestLine = 1, kHeader = 2, kBody = 4, kAll = 8 };
 
     HttpContext() : cursor_(kRequestLine) {}
-    bool ParseRequest(const char* from, const char* to) { return true; }
+    bool ParseRequest(const char* from, const char* to); 
     void Reset() {
         cursor_ = kRequestLine;
         HttpRequest dummy;
@@ -77,7 +77,7 @@ public:
     HttpRequest& Request() { return request_; }
 
 private:
-    bool ParseRequestLine(const char* from, const char* to) { return true; }
+    bool ParseRequestLine(const char* from, const char* to); 
 
     HttpRequest request_;
     ParseCursor cursor_;
