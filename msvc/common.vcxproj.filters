@@ -39,6 +39,9 @@
     <ClInclude Include="..\common\generic_socket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\mysql_wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\log_stream.cc">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\common\http_server.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\mysql_wrapper.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
