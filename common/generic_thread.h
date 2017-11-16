@@ -8,7 +8,7 @@
 
 
 #define THREADNAME_MAXLEN 16
-#if defined(_WIN32) || defined(__CYGWIN__)
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>  // _TRUNCATE
@@ -19,7 +19,7 @@
 inline char* get_thread_name() {
     __declspec(thread) static char tname[THREADNAME_MAXLEN + 1] = { 0 };
     if (tname[0] == 0) {
-        snprintf(tname, THREADNAME_MAXLEN + 1, "%*X", THREADNAME_MAXLEN, GetCurrentThreadId());
+        snprintf(tname, THREADNAME_MAXLEN + 1, "%0*X", THREADNAME_MAXLEN, GetCurrentThreadId());
     }
     return &tname[0];
 }
@@ -45,7 +45,13 @@ void init_pthread_key_name(void) {
 inline const char* get_thread_name() {
     auto thread = pthread_self();
     (void)pthread_once(&_pthread_key_once, init_pthread_key_name);
-    return static_cast<const char*>(pthread_getspecific(_pthread_key_name));
+    const char* res = static_cast<const char*>(pthread_getspecific(_pthread_key_name));
+    if (res == nullptr) {
+        __thread static char tname[THREADNAME_MAXLEN + 1] = { 0 };
+        snprintf(tname, THREADNAME_MAXLEN + 1, "%0*X", THREADNAME_MAXLEN, thread);
+        return tname;
+    }
+    return res;
 }
 
 inline const set_thread_name(const char* tname) {

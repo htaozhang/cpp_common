@@ -8,7 +8,7 @@
 
 #include "utils.h"
 
-#if defined(_WIN32) || defined(__MINGW32__) || defined(__MINGW64__) || defined(__CYGWIN__)
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 #include <iostream>
 #include <sstream>
 #include <iomanip>  // std::get_time

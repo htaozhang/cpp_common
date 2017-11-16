@@ -6,43 +6,44 @@
 #ifndef __MYSQL_WRAPPER_H__
 #define __MYSQL_WRAPPER_H__
 
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 #include <mysql.h>
-
+#elif defined(__linux__)
+#include <mysql/mysql.h>
+#endif
+#include <cstdlib>
 #include <string>
 #include <vector>
-#include <cstdlib>
-
-using namespace std;
 
 
 class MySqlWrapper
 {
 public:
-    MySqlWrapper(const string& host, 
-            const string& user, 
-            const string& passwd, 
-            const string& db);
+    MySqlWrapper(const std::string& host, 
+            const std::string& user, 
+            const std::string& passwd, 
+            const std::string& db);
     ~MySqlWrapper();
 
     bool Connect();
     bool Disconnect();
-    string ExcapeString(const string& field);
-    bool Insert(const string& sql);
-    bool Delete(const string& sql);
-    bool Update(const string& sql);
-    bool Query(const string& sql, vector<vector<string> >& output);
+    std::string ExcapeString(const std::string& field, char quote = '`');
+    bool Insert(const std::string& sql);
+    bool Delete(const std::string& sql);
+    bool Update(const std::string& sql);
+    bool Query(const std::string& sql, std::vector<std::vector<std::string> >& output);
     int Errno(); 
-    string Error();
+    std::string Error();
 
 private:
-    bool ExecuteSQL(const string& sql);
+    bool ExecuteSQL(const std::string& sql);
 
 private:
     MYSQL* mysql_;
-    string host_;
-    string user_;
-    string passwd_;
-    string db_;
+    std::string host_;
+    std::string user_;
+    std::string passwd_;
+    std::string db_;
     bool connected_;
 };
 

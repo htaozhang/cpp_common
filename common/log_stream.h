@@ -5,12 +5,11 @@
 #ifndef __LOG_STREAM_H__
 #define __LOG_STREAM_H__
 
+#include <cstdio>
+#include <cstring> // memcpy() strlen()
 #include <string>
 #include <utility>
 #include <algorithm> // std::fill
-
-#include <stdio.h>
-#include <string.h> // memcpy() strlen()
 
 #include "utils.h"
 #include "noncopyable.h"
@@ -94,6 +93,3 @@ private:
 };
 
 #endif /* __LOG_STREAM_H__ */
-
-
-

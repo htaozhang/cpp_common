@@ -56,10 +56,10 @@
     <ClCompile Include="..\common\logging.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\http_server.cc">
+    <ClCompile Include="..\common\mysql_wrapper.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\mysql_wrapper.cc">
+    <ClCompile Include="..\common\http_server.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

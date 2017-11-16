@@ -2,19 +2,16 @@
 // All rights reserved.
 //
 
-#include <iostream>
-
 #include "mysql_wrapper.h"
 
-#include <assert.h>
-#include <string.h>
+#include <cassert>
+#include <cstring>
+#include <iostream>
 
-using namespace std;
-
-MySqlWrapper::MySqlWrapper(const string& host, 
-        const string& user, 
-        const string& passwd, 
-        const string& db) : host_(host), user_(user), passwd_(passwd), db_(db), connected_(false) {
+MySqlWrapper::MySqlWrapper(const std::string& host, 
+        const std::string& user, 
+        const std::string& passwd, 
+        const std::string& db) : host_(host), user_(user), passwd_(passwd), db_(db), connected_(false) {
     mysql_ = (MYSQL*)malloc(sizeof(MYSQL));
     mysql_init(mysql_);
 }
@@ -52,13 +49,14 @@ bool MySqlWrapper::Disconnect() {
     return true;
 }
 
-string MySqlWrapper::ExcapeString(const string& field) {
-    string answer;
+std::string MySqlWrapper::ExcapeString(const std::string& field, char quote/* = '`' */) {
+    std::string answer;
     size_t len = 2 * (field.length()) + 1;
     char* tmp = (char*)malloc(len);
+
     // mysql version: >5.6
-    // mysql_real_escape_string_quote(mysql_, tmp, field.c_str(), field.length(), '\'');
-    unsigned long n = 
+    size_t n = LIBMYSQL_VERSION_ID > 50600 ? 
+        mysql_real_escape_string_quote(mysql_, tmp, field.c_str(), field.length(), quote) :
         mysql_real_escape_string(mysql_, tmp, field.c_str(), field.length());
 
     assert(n < len);
@@ -70,19 +68,19 @@ string MySqlWrapper::ExcapeString(const string& field) {
 }
 
 
-bool MySqlWrapper::Insert(const string& sql) {
+bool MySqlWrapper::Insert(const std::string& sql) {
     return ExecuteSQL(sql);
 }
 
-bool MySqlWrapper::Delete(const string& sql) {
+bool MySqlWrapper::Delete(const std::string& sql) {
     return ExecuteSQL(sql);
 }
 
-bool MySqlWrapper::Update(const string& sql) {
+bool MySqlWrapper::Update(const std::string& sql) {
     return ExecuteSQL(sql);
 }
 
-bool MySqlWrapper::Query(const string& sql, vector<vector<string> >& output) {
+bool MySqlWrapper::Query(const std::string& sql, std::vector<std::vector<std::string> >& output) {
     if (!ExecuteSQL(sql))
         return false;
 
@@ -104,7 +102,7 @@ bool MySqlWrapper::Query(const string& sql, vector<vector<string> >& output) {
 }
 
 
-bool MySqlWrapper::ExecuteSQL(const string& sql) {
+bool MySqlWrapper::ExecuteSQL(const std::string& sql) {
     if (!connected_ || 
             mysql_real_query(mysql_, sql.c_str(), strlen(sql.c_str()))) {
         return false;
@@ -118,8 +116,6 @@ int MySqlWrapper::Errno() {
 }
 
 
-string MySqlWrapper::Error() {
+std::string MySqlWrapper::Error() {
     return mysql_error(mysql_);
 }
-
-

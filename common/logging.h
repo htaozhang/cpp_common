@@ -8,11 +8,10 @@
 #include "log_stream.h"
 #include "time_wrapper.h"
 
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
     #define __thread __declspec(thread)
     #define strerror_r(errno, buf, len) strerror_s(buf, len, errno)
 #endif
-
 
 class Logging {
 public:

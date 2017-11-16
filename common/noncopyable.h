@@ -11,7 +11,7 @@ public:
     ~NonCopyable() {}
 private:
     NonCopyable(const NonCopyable&);
-    NonCopyable& operator=(const NonCopyable&);
+    NonCopyable& operator=(const NonCopyable&) = delete;
 };
 
 #endif /* __NONCOPYABLE_H__ */

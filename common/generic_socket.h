@@ -6,7 +6,7 @@
 #ifndef __GENERIC_SOCKET_H__
 #define __GENERIC_SOCKET_H__
 
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 #define _WINSOCK_DEPRECATED_NO_WARNINGS 1 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
