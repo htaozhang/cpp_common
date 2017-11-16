@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\common\generic_socket.h" />
+    <ClInclude Include="..\common\generic_thread.h" />
     <ClInclude Include="..\common\generic_time.h" />
     <ClInclude Include="..\common\http_server.h" />
     <ClInclude Include="..\common\logging.h" />

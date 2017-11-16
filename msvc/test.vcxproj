@@ -22,6 +22,7 @@
     <ClCompile Include="..\test\httpserver_test\httpserver_test.cc" />
     <ClCompile Include="..\test\logging_test\logging_test.cc" />
     <ClCompile Include="..\test\logstream_test\logstream_test.cc" />
+    <ClCompile Include="..\test\thread_test\thread_test.cc" />
     <ClCompile Include="..\test\timewrapper_test\timewrapper_test.cc" />
   </ItemGroup>
   <ItemGroup>

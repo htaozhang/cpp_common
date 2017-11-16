@@ -42,6 +42,9 @@
     <ClInclude Include="..\common\mysql_wrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\generic_thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\log_stream.cc">

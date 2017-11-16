@@ -27,5 +27,8 @@
     <ClCompile Include="..\test\httpserver_test\httpserver_test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\thread_test\thread_test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
