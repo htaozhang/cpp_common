@@ -5,7 +5,7 @@ set(TESTS
     #jsonreflect_test
     #rediswrapper_test
     timewrapper_test
-    #mysqlwrapper_test
+    mysqlwrapper_test
     httpserver_test
     logstream_test
     logging_test

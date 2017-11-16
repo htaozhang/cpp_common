@@ -8,7 +8,7 @@
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 #include <mysql.h>
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 #include <mysql/mysql.h>
 #endif
 #include <cstdlib>

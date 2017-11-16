@@ -119,7 +119,7 @@ bool HttpContext::ParseRequest(const char* from, const char* to) {
             }
             break;
         case kHeader:
-            if (crlf = std::search(start, to, "\r\n", "\r\n" + 2)) {
+            if ((crlf = std::search(start, to, "\r\n", "\r\n" + 2))) {
                 const char* colon = std::find(start, crlf, ':');
                 if (colon != crlf) {
                     request_.SetHeader(start, colon, crlf);

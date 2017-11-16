@@ -5,7 +5,7 @@ set(COMMON_SOURCES
     http_server.cc
     log_stream.cc
     logging.cc
-    #mysql_wrapper.cc
+    mysql_wrapper.cc
     #redis_wrapper.cc
     time_wrapper.cc
     )
@@ -16,7 +16,7 @@ SET(libs
     ${GTEST_LIBRARY}
     ${GTEST_MAIN_LIBRARY}
     ${HIREDIS_LIBRARY}
-    #${MYSQLCLIENT_LIBRARY}
+    ${MYSQLCLIENT_LIBRARY}
     ${TCMALLOC_AND_PROFILER_LIBRARY}
     )
 
