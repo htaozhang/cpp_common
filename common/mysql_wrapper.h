@@ -27,7 +27,7 @@ public:
 
     bool Connect();
     bool Disconnect();
-    std::string ExcapeString(const std::string& field, char quote = '`');
+    std::string ExcapeString(const std::string& field, char quote = '\'');
     bool Insert(const std::string& sql);
     bool Delete(const std::string& sql);
     bool Update(const std::string& sql);
