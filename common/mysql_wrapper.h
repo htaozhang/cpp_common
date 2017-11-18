@@ -11,6 +11,7 @@
 #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 #include <mysql/mysql.h>
 #endif
+
 #include <cstdlib>
 #include <string>
 #include <vector>

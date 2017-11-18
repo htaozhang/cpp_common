@@ -10,6 +10,7 @@ INCLUDE_DIRECTORIES(./common
                     ./thirdparty/rapidjson/include 
                     ./thirdparty/hiredis/include
                     ./thirdparty/gpreftools/include
+                    /usr/local/include
                     )
 
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)

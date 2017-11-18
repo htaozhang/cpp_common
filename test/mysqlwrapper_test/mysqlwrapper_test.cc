@@ -50,15 +50,9 @@ TEST(MySqlWrapper, Query) {
 }
 
 TEST(MySqlWrapper, ExcapeString) {
-    std::string field = "my name\\'s xxx\\\"";
     MySqlWrapper mysql(HOST, USER, PASSWD, DB);
     EXPECT_EQ(true, mysql.Connect());
-    EXPECT_EQ(field, mysql.ExcapeString("my name's xxx\"", '\''));
+    EXPECT_EQ("my name\\'s xxx\\\"", mysql.ExcapeString("my name's xxx\"", '\''));
+    EXPECT_EQ("my name's xxx\\\"", mysql.ExcapeString("my name's xxx\"", '"'));
 }
 
-TEST(MySqlWrapper, ExcapeString) {
-    std::string field = "my name's xxx\\\"";
-    MySqlWrapper mysql(HOST, USER, PASSWD, DB);
-    EXPECT_EQ(true, mysql.Connect());
-    EXPECT_EQ(field, mysql.ExcapeString("my name's xxx\"", '"'));
-}
