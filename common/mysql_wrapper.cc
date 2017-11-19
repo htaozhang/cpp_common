@@ -99,13 +99,13 @@ bool MySqlWrapper::Query(const std::string& sql) {
 }
 
 
-bool MySqlWrapper::Query(const std::string& sql,
-                         std::vector<std::vector<std::string> >& output) {
+bool MySqlWrapper::Query(const std::string& sql, RESULT& output) {
     if (!ExecuteSQL(sql))
         return false;
 
     MYSQL_RES* res = mysql_store_result(mysql_);   
     if (res) {
+        output.resize(mysql_num_rows(res));
         unsigned long size = mysql_num_fields(res);
         while (MYSQL_ROW row = mysql_fetch_row(res)) {
             std::vector<std::string> tmp;
@@ -118,6 +118,25 @@ bool MySqlWrapper::Query(const std::string& sql,
         mysql_free_result(res);
     }
 
+    return true;
+}
+
+bool MySqlWrapper::UnbufferedQuery(const std::string& sql, RESULT& output) {
+    if (!ExecuteSQL(sql))
+        return false;
+    
+    MYSQL_RES* res = mysql_use_result(mysql_);
+    if (res) {
+        unsigned long size = mysql_num_fields(res);
+        while (MYSQL_ROW row = mysql_fetch_row(res)) {
+            std::vector<std::string> tmp;
+            tmp.reserve(size);
+            for (unsigned long i = 0; i < size; i++)
+                tmp.push_back(row[i] ? row[i] : "");
+            output.push_back(tmp);
+        }
+        mysql_free_result(res);
+    }
     return true;
 }
 

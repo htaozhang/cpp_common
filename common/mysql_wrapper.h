@@ -19,6 +19,8 @@
 
 class MySqlWrapper
 {
+    typedef std::vector<std::vector<std::string> > RESULT;
+    
 public:
     MySqlWrapper(const std::string& host, 
             const std::string& user, 
@@ -32,9 +34,11 @@ public:
     bool Insert(const std::string& sql);
     bool Delete(const std::string& sql);
     bool Update(const std::string& sql);
-    bool Query(const std::string&sql);
-    bool Query(const std::string& sql, std::vector<std::vector<std::string> >& output);
-    int Errno(); 
+    bool Query(const std::string& sql);
+    bool Query(const std::string& sql, RESULT& output);
+    bool UnbufferedQuery(const std::string& sql, RESULT& output);
+    
+    int Errno();
     std::string Error();
 
 private:
