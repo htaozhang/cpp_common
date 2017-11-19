@@ -33,7 +33,7 @@ inline unsigned long get_thread_id() {
     return GetCurrentThreadId();
 }
 
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 #include <pthread.h>
 
 static pthread_once_t _pthread_key_once = PTHREAD_ONCE_INIT;

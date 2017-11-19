@@ -32,6 +32,7 @@ public:
     bool Insert(const std::string& sql);
     bool Delete(const std::string& sql);
     bool Update(const std::string& sql);
+    bool Query(const std::string&sql);
     bool Query(const std::string& sql, std::vector<std::vector<std::string> >& output);
     int Errno(); 
     std::string Error();
