@@ -38,7 +38,9 @@ inline int gettimeofday(struct timeval * tp, struct timezone * tzp) {
     return 0;
 }
 
-inline char *strptime(const char *s, const char *format, struct tm *tm) {
+inline char *strptime(const char *s,
+                      const char *format,
+                      struct tm *tm) {
     std::istringstream ss(s);
     ss.imbue(std::locale(setlocale(LC_ALL, NULL)));
     ss >> std::get_time(tm, format);
@@ -55,23 +57,23 @@ inline char *strptime(const char *s, const char *format, struct tm *tm) {
 
 #endif
 
-inline utils::Null<> localtime_r(...) { return utils::Null<>(); }
-inline utils::Null<> localtime_s(...) { return utils::Null<>(); }
-inline utils::Null<> gmtime_r(...) { return utils::Null<>(); }
-inline utils::Null<> gmtime_s(...) { return utils::Null<>(); }
+inline utils::Null<> localtime_r(...)   { return utils::Null<>(); }
+inline utils::Null<> localtime_s(...)   { return utils::Null<>(); }
+inline utils::Null<> gmtime_r(...)      { return utils::Null<>(); }
+inline utils::Null<> gmtime_s(...)      { return utils::Null<>(); }
 
 inline std::tm localtime(std::time_t time) {
     struct LocalTime {
         std::time_t time_;
-        std::tm tm_;
+        std::tm     tm_;
 
         LocalTime(std::time_t t) : time_(t) {}
 
-        bool run() { return handle(localtime_r(&time_, &tm_)); }
-        bool handle(std::tm *tm) { return tm != NULL; }
-        bool handle(utils::Null<>) { return fallback(localtime_s(&tm_, &time_)); }
-        bool fallback(int res) { return res == 0; }
-        bool fallback(utils::Null<>) {
+        bool run()                  { return handle(localtime_r(&time_, &tm_)); }
+        bool handle(std::tm *tm)    { return tm != NULL; }
+        bool handle(utils::Null<>)  { return fallback(localtime_s(&tm_, &time_)); }
+        bool fallback(int res)      { return res == 0; }
+        bool fallback(utils::Null<>){
             std::tm *tm = std::localtime(&time_);
             return tm == NULL ? false : (tm_ = *tm, true);
         }
@@ -84,15 +86,15 @@ inline std::tm localtime(std::time_t time) {
 inline std::tm gmtime(std::time_t time) {
     struct GMTime {
         std::time_t time_;
-        std::tm tm_;
+        std::tm     tm_;
 
         GMTime(std::time_t t) : time_(t) {}
 
-        bool run() { return handle(gmtime_r(&time_, &tm_)); }
-        bool handle(std::tm *tm) { return tm != NULL; }
-        bool handle(utils::Null<>) { return fallback(gmtime_s(&tm_, &time_)); }
-        bool fallback(int res) { return res == 0; }
-        bool fallback(utils::Null<>) {
+        bool run()                  { return handle(gmtime_r(&time_, &tm_)); }
+        bool handle(std::tm *tm)    { return tm != NULL; }
+        bool handle(utils::Null<>)  { return fallback(gmtime_s(&tm_, &time_)); }
+        bool fallback(int res)      { return res == 0; }
+        bool fallback(utils::Null<>){
             std::tm *tm = std::gmtime(&time_);
             return tm == NULL ? false : (tm_ = *tm, true);
         }

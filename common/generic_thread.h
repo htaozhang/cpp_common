@@ -19,14 +19,21 @@
 inline char* get_thread_name() {
     __declspec(thread) static char tname[THREADNAME_MAXLEN + 1] = { 0 };
     if (tname[0] == 0) {
-        snprintf(tname, THREADNAME_MAXLEN + 1, "%0*X", THREADNAME_MAXLEN, GetCurrentThreadId());
+        snprintf(tname,
+                 THREADNAME_MAXLEN + 1,
+                 "%0*X",
+                 THREADNAME_MAXLEN,
+                 GetCurrentThreadId());
     }
     return &tname[0];
 }
 
 inline void set_thread_name(const char* name) {
     //strncpy(get_thread_name(), name, THREADNAME_MAXLEN + 1);
-    strncpy_s(get_thread_name(), THREADNAME_MAXLEN + 1, name, _TRUNCATE);
+    strncpy_s(get_thread_name(),
+              THREADNAME_MAXLEN + 1,
+              name,
+              _TRUNCATE);
 }
 
 inline unsigned long get_thread_id() {
@@ -52,13 +59,14 @@ inline const char* get_thread_name() {
 #ifdef __APPLE__
         uint64_t threadid;
         pthread_threadid_np(thread, &threadid);
-#else 
+#else
         uint64_t threadid = thread;
 #endif
         snprintf(tname,
                  THREADNAME_MAXLEN + 1,
                  "%0*X",
-                 THREADNAME_MAXLEN, static_cast<unsigned int>(threadid));
+                 THREADNAME_MAXLEN,
+                 static_cast<unsigned int>(threadid));
         return tname;
     }
     return res;
@@ -73,3 +81,5 @@ inline void set_thread_name(const char* tname) {
 
 
 #endif // !__GENERIC_THREAD_H__
+
+
