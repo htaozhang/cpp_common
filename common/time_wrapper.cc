@@ -25,17 +25,23 @@ time_t TimeWrapper::SecondsSinceEpoch() const {
     return static_cast<time_t>(microSecondsSinceEpoch_ / microSecondsPerSecond);
 }
 
-std::string TimeWrapper::ToString(
-    const std::string& fmt/* = "%Y%m%d %H:%M:%S" */, bool showMicroSec/* = true */) const {
+std::string TimeWrapper::ToString(const std::string& fmt/* = "%Y%m%d %H:%M:%S" */,
+                                  bool showMicroSec/* = true */) const {
     char buf[32] = {0};
     
     if (fmt.empty()) {
         int64_t seconds = microSecondsSinceEpoch_ / microSecondsPerSecond;
         int64_t microseconds = microSecondsSinceEpoch_ % microSecondsPerSecond;
-        snprintf(buf, sizeof(buf)-1, "%" PRId64 "%.06" PRId64 "", seconds, microseconds);
+        snprintf(buf,
+                 sizeof(buf)-1,
+                 "%" PRId64 "%.06" PRId64 "",
+                 seconds,
+                 microseconds);
+        
         return buf;
     } else {
-        std::time_t seconds = static_cast<std::time_t>(microSecondsSinceEpoch_ / microSecondsPerSecond);
+        std::time_t seconds = static_cast<std::time_t>(
+                                                       microSecondsSinceEpoch_ /microSecondsPerSecond);
         std::tm TM = gmtime(seconds);
         strftime(buf, sizeof(buf)-1, fmt.c_str(), &TM);
         return buf;
@@ -44,7 +50,8 @@ std::string TimeWrapper::ToString(
     return "";
 }
 
-time_t TimeWrapper::ToTime(const std::string& timeString, const std::string& fmt) const {
+time_t TimeWrapper::ToTime(const std::string& timeString,
+                           const std::string& fmt) const {
     std::tm TM;
     strptime(timeString.c_str(), fmt.c_str(), &TM);
     TM.tm_sec = 0;

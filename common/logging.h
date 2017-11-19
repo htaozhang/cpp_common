@@ -13,9 +13,31 @@
     #define strerror_r(errno, buf, len) strerror_s(buf, len, errno)
 #endif
 
+// lumbda expression
+static const bool HAS_COLOR = [](){
+#if defined(_WIN32)
+    return false;
+#else
+    if (const char* term = std::getenv("TERM")) {
+        return (strncmp(term, "linux", 5) == 0 ||
+                strncmp(term, "xterm", 5) == 0);
+    } else {
+        return false;
+    }
+#endif
+}();
+
 class Logging {
 public:
-    enum Level { L_TRACE, L_DEBUG, L_INFO, L_WARN, L_ERROR, L_FATAL, LEVELS_NUM };
+    enum Level {
+        L_TRACE,
+        L_DEBUG,
+        L_INFO,
+        L_WARN,
+        L_ERROR,
+        L_FATAL,
+        LEVELS_NUM
+    };
 
     class SourceFile {
     public:
@@ -61,8 +83,18 @@ private:
         SourceFile file_;
         int line_;
         LogStream stream_;
+        
+        // terminal color
+#if defined(_WIN32) || defined(__CYGWIN__)
+#define COLOR(ID) ("\x1b[1;" #ID "m")
+#else
+#define COLOR(ID) ("\e[" #ID "m")
+#endif
+        inline const char* ColorReset()    { return HAS_COLOR ? COLOR(0) : ""; }
+        inline const char* ColorRed()      { return HAS_COLOR ? COLOR(31) : ""; }
+        inline const char* ColorYellow()   { return HAS_COLOR ? COLOR(33) : ""; }
     };
-
+    
     Core core_;
 };
 

@@ -8,10 +8,16 @@
 #include <cstring>
 #include <iostream>
 
-MySqlWrapper::MySqlWrapper(const std::string& host, 
-        const std::string& user, 
-        const std::string& passwd, 
-        const std::string& db) : host_(host), user_(user), passwd_(passwd), db_(db), connected_(false) {
+MySqlWrapper::MySqlWrapper(const std::string& host,
+                           const std::string& user,
+                           const std::string& passwd,
+                           const std::string& db)
+    : host_(host),
+      user_(user),
+      passwd_(passwd),
+      db_(db),
+      connected_(false)
+{
     mysql_ = (MYSQL*)malloc(sizeof(MYSQL));
     mysql_init(mysql_);
 }
@@ -49,7 +55,8 @@ bool MySqlWrapper::Disconnect() {
     return true;
 }
 
-std::string MySqlWrapper::ExcapeString(const std::string& field, char quote/* = '\'' */) {
+std::string MySqlWrapper::ExcapeString(const std::string& field,
+                                       char quote/* = '\'' */) {
     std::string answer;
     size_t len = 2 * (field.length()) + 1;
     char* tmp = (char*)malloc(len);
@@ -92,7 +99,8 @@ bool MySqlWrapper::Query(const std::string& sql) {
 }
 
 
-bool MySqlWrapper::Query(const std::string& sql, std::vector<std::vector<std::string> >& output) {
+bool MySqlWrapper::Query(const std::string& sql,
+                         std::vector<std::vector<std::string> >& output) {
     if (!ExecuteSQL(sql))
         return false;
 

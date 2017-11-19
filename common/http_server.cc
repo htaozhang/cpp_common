@@ -71,7 +71,9 @@ const char* HttpRequest::MethodString() const {
     return result;
 }
 
-void HttpRequest::SetHeader(const char* from, const char* colon, const char* to) {
+void HttpRequest::SetHeader(const char* from,
+                            const char* colon,
+                            const char* to) {
     std::string field(from, colon);
     for (++colon; colon < to && isspace(*colon); colon++)
         ;
@@ -196,8 +198,8 @@ void HttpResponse::AppendToBuffer(std::string* output) const {
         output->append("Connection: Keep-Alive\r\n");
     }
 
-    for (std::map<std::string, std::string>::const_iterator iter = headers_.begin(); 
-        iter != headers_.end(); iter++) {
+    for (std::map<std::string, std::string>::const_iterator
+         iter = headers_.begin(); iter != headers_.end(); iter++) {
         output->append(iter->first);
         output->append(": ");
         output->append(iter->second);

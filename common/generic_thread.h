@@ -8,13 +8,13 @@
 
 
 #define THREADNAME_MAXLEN 16
+
 #if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>  // _TRUNCATE
 #include <windows.h>
-
-#define __thread __declspec(thread)
+//#define __thread __declspec(thread)
 
 inline char* get_thread_name() {
     __declspec(thread) static char tname[THREADNAME_MAXLEN + 1] = { 0 };
@@ -48,13 +48,23 @@ inline const char* get_thread_name() {
     const char* res = static_cast<const char*>(pthread_getspecific(_pthread_key_name));
     if (res == nullptr) {
         __thread static char tname[THREADNAME_MAXLEN + 1] = { 0 };
-        snprintf(tname, THREADNAME_MAXLEN + 1, "%0*X", THREADNAME_MAXLEN, thread);
+        
+#ifdef __APPLE__
+        uint64_t threadid;
+        pthread_threadid_np(thread, &threadid);
+#else 
+        uint64_t threadid = thread;
+#endif
+        snprintf(tname,
+                 THREADNAME_MAXLEN + 1,
+                 "%0*X",
+                 THREADNAME_MAXLEN, static_cast<unsigned int>(threadid));
         return tname;
     }
     return res;
 }
 
-inline const set_thread_name(const char* tname) {
+inline void set_thread_name(const char* tname) {
     (void)pthread_once(&_pthread_key_once, init_pthread_key_name);
     (void)pthread_setspecific(_pthread_key_name, strdup(tname));
 }
