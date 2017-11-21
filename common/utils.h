@@ -5,11 +5,11 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include <assert.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
+#include <cstdio>
+#include <cctype>
+#include <cstdlib>
+#include <cstring>
 //#include <nmmintrin.h>
 
 #include <string>
@@ -26,16 +26,9 @@
 
 namespace utils {
 
-#if !defined(DIGITS)
-    #define DIGITS "9876543210123456789"
-#endif
-#if !defined(DIGITSHEX)
-    #define DIGITSHEX "0123456789ABCDEF"
-#endif
-#if !defined(ZERO)
-    #define ZERO (DIGITS + 9)
-#endif
-
+#define DIGITS      ("9876543210123456789")
+#define DIGITSHEX   ("0123456789ABCDEF")
+#define ZERO        (DIGITS + 9)
     //const char digits[] = "9876543210123456789";
     //const char digitsHex[] = "0123456789ABCDEF";
     //const char* zero = digits + 9;
@@ -108,7 +101,7 @@ namespace utils {
         return "0x" + answer;
     }
 
-#ifdef __LINUX__
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     inline bool ExeShellCommand(const std::string& cmd, std::vector<std::string>& res) {
         FILE *fres = NULL;
         char buffer[1024];
@@ -167,16 +160,14 @@ namespace utils {
         input = input.substr(from);
     }
 
-    inline void TrimStringRight(std::string& input)
-    {
+    inline void TrimStringRight(std::string& input) {
         size_t to = input.length() - 1;
         while (to >= 0 && isspace(input[to]))
             to--;
         input = input.substr(0, to + 1);
     }
 
-    inline void TrimString(std::string& input)
-    {
+    inline void TrimString(std::string& input) {
         // ' ', '\t', '\r', '\n', '\v', '\f'
         TrimStringLeft(input);
         TrimStringRight(input);

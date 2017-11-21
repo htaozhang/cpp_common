@@ -98,14 +98,13 @@ bool MySqlWrapper::Query(const std::string& sql) {
     return true;
 }
 
-
 bool MySqlWrapper::Query(const std::string& sql, RESULT& output) {
     if (!ExecuteSQL(sql))
         return false;
 
     MYSQL_RES* res = mysql_store_result(mysql_);   
     if (res) {
-        output.resize(mysql_num_rows(res));
+        output.reserve(mysql_num_rows(res));
         unsigned long size = mysql_num_fields(res);
         while (MYSQL_ROW row = mysql_fetch_row(res)) {
             std::vector<std::string> tmp;

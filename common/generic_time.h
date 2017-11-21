@@ -2,7 +2,6 @@
 // All rights reserved.
 //
 //
-
 #ifndef __GENERIC_TIME_H__
 #define __GENERIC_TIME_H__
 

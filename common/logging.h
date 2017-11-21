@@ -16,6 +16,16 @@
 // lumbda expression
 static const bool HAS_COLOR = [](){
 #if defined(_WIN32)
+#ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+#endif
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (out != INVALID_HANDLE_VALUE) {
+        DWORD mode = 0;
+        GetConsoleMode(out, &mode);
+        mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        return SetConsoleMode(out, mode) != 0;
+    }
     return false;
 #else
     if (const char* term = std::getenv("TERM")) {
@@ -90,9 +100,9 @@ private:
 #else
 #define COLOR(ID) ("\e[" #ID "m")
 #endif
-        inline const char* ColorReset()    { return HAS_COLOR ? COLOR(0) : ""; }
-        inline const char* ColorRed()      { return HAS_COLOR ? COLOR(31) : ""; }
-        inline const char* ColorYellow()   { return HAS_COLOR ? COLOR(33) : ""; }
+        inline const char* ColorReset()     { return HAS_COLOR ? COLOR(0) : ""; }
+        inline const char* ColorRed()       { return HAS_COLOR ? COLOR(31) : ""; }
+        inline const char* ColorYellow()    { return HAS_COLOR ? COLOR(33) : ""; }
     };
     
     Core core_;
