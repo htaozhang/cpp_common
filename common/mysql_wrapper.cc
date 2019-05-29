@@ -11,67 +11,90 @@
 MySqlWrapper::MySqlWrapper(const std::string& host,
                            const std::string& user,
                            const std::string& passwd,
-                           const std::string& db)
+                           const std::string& db,
+                           unsigned port)
     : host_(host),
       user_(user),
       passwd_(passwd),
       db_(db),
+      port_(port),
       connected_(false)
 {
-    mysql_ = (MYSQL*)malloc(sizeof(MYSQL));
-    mysql_init(mysql_);
+    // mysql_init(&mysql_);
 }
 
 MySqlWrapper::~MySqlWrapper() {
     if (connected_) {
-        mysql_close(mysql_);
+        mysql_close(&mysql_);
     }
-    if (mysql_) {
-        free(mysql_);
-    }
-    mysql_ = NULL;
 }
 
 
 bool MySqlWrapper::Connect() {
-    if (!mysql_real_connect(mysql_, 
+    Disconnect();
+
+    if (!mysql_init(&mysql_)) {
+        return false;
+    }
+    if (!mysql_real_connect(&mysql_,
                 host_.c_str(), 
                 user_.c_str(), 
                 passwd_.c_str(), 
                 (db_.empty() ? NULL : db_.c_str()), 
-                0, 
+                port_,
                 NULL, 
                 0)) {
-        mysql_close(mysql_);
+        mysql_close(&mysql_);
         return false;
     }
 
-    mysql_set_character_set(mysql_, "utf8");
+    mysql_set_character_set(&mysql_, "utf8");
     connected_ = true;
     return true;
 }
 
 bool MySqlWrapper::Disconnect() {
-    connected_ = false;
-    mysql_close(mysql_);
+    if (connected_) {
+        mysql_close(&mysql_);
+        connected_ = false;
+    }
     return true;
+}
+
+void MySqlWrapper::Reset(const std::string& host,
+                         const std::string& user,
+                         const std::string& passwd,
+                         const std::string& db,
+                         unsigned port) {
+    host_ = host;
+    user_ = user;
+    passwd_ = passwd;
+    db_ = db;
+    port_ = port;
 }
 
 std::string MySqlWrapper::ExcapeString(const std::string& field,
                                        char quote/* = '\'' */) {
     std::string answer;
-    size_t len = 2 * (field.length()) + 1;
-    char* tmp = (char*)malloc(len);
+    size_t len = field.length() * 2 + 1;
+    char* tmp = new char[len];
     
-    // mysql version: >5.6.*
+    // mysql version: >5.7.*
     size_t n = LIBMYSQL_VERSION_ID >= 50700 ?
-        mysql_real_escape_string_quote(mysql_, tmp, field.c_str(), field.length(), quote) : 
-        mysql_real_escape_string(mysql_, tmp, field.c_str(), field.length()); /* NO_BACKSLASH_ESCAPES specified, error */
+        mysql_real_escape_string_quote(&mysql_,
+                                       tmp,
+                                       field.c_str(),
+                                       field.length(),
+                                       quote) :
+        mysql_real_escape_string(&mysql_,
+                                 tmp,
+                                 field.c_str(),
+                                 field.length()); /* NO_BACKSLASH_ESCAPES specified, error */
 
-    assert(n < len);
+    // assert(n < len);
     // tmp[n] = '\0'; /* followed by a terminating null byte. */
     answer.assign(tmp, tmp + n);
-    free(tmp);
+    delete tmp;
     return answer;
 }
 
@@ -92,7 +115,7 @@ bool MySqlWrapper::Query(const std::string& sql) {
     if (!ExecuteSQL(sql))
         return false;
     
-    MYSQL_RES* res = mysql_store_result(mysql_);
+    MYSQL_RES* res = mysql_store_result(&mysql_);
     if (res) {
         mysql_free_result(res);
     }
@@ -104,7 +127,7 @@ bool MySqlWrapper::Query(const std::string& sql, RESULT& output) {
     if (!ExecuteSQL(sql))
         return false;
 
-    MYSQL_RES* res = mysql_store_result(mysql_);   
+    MYSQL_RES* res = mysql_store_result(&mysql_);
     if (res) {
         output.reserve(mysql_num_rows(res));
         unsigned long size = mysql_num_fields(res);
@@ -126,7 +149,7 @@ bool MySqlWrapper::UnbufferedQuery(const std::string& sql, RESULT& output) {
     if (!ExecuteSQL(sql))
         return false;
     
-    MYSQL_RES* res = mysql_use_result(mysql_);
+    MYSQL_RES* res = mysql_use_result(&mysql_);
     if (res) {
         unsigned long size = mysql_num_fields(res);
         while (MYSQL_ROW row = mysql_fetch_row(res)) {
@@ -143,19 +166,24 @@ bool MySqlWrapper::UnbufferedQuery(const std::string& sql, RESULT& output) {
 
 
 bool MySqlWrapper::ExecuteSQL(const std::string& sql) {
-    if (!connected_ || 
-            mysql_real_query(mysql_, sql.c_str(), strlen(sql.c_str()))) {
+    if (!connected_ && !Connect()) {
         return false;
+    }
+    if (mysql_real_query(&mysql_, sql.c_str(), sql.size())) {
+        // retry
+        if (!Connect() || mysql_real_query(&mysql_, sql.c_str(), sql.size())) {
+            return false;
+        }
     }
 
     return true;
 }
 
 int MySqlWrapper::Errno() {
-    return mysql_errno(mysql_);
+    return mysql_errno(&mysql_);
 }
 
 
 std::string MySqlWrapper::Error() {
-    return mysql_error(mysql_);
+    return mysql_error(&mysql_);
 }

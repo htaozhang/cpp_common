@@ -22,14 +22,21 @@ class MySqlWrapper
     typedef std::vector<std::vector<std::string> > RESULT;
     
 public:
+    MySqlWrapper() {}
     MySqlWrapper(const std::string& host, 
             const std::string& user, 
             const std::string& passwd, 
-            const std::string& db);
+            const std::string& db,
+            unsigned port);
     ~MySqlWrapper();
 
     bool Connect();
     bool Disconnect();
+    void Reset(const std::string&,
+               const std::string&,
+               const std::string&,
+               const std::string&,
+               unsigned);
     std::string ExcapeString(const std::string& field, char quote = '\'');
     bool Insert(const std::string& sql);
     bool Delete(const std::string& sql);
@@ -45,12 +52,13 @@ private:
     bool ExecuteSQL(const std::string& sql);
 
 private:
-    MYSQL* mysql_;
+    MYSQL       mysql_;
+    bool        connected_;
     std::string host_;
     std::string user_;
     std::string passwd_;
     std::string db_;
-    bool connected_;
+    unsigned    port_;
 };
 
 #endif /* __MYSQL_WRAPPER_H__ */
