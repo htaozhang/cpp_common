@@ -25,9 +25,11 @@ MySqlWrapper::MySqlWrapper(const std::string& host,
 MySqlWrapper::~MySqlWrapper() {
     if (connected_) {
         mysql_close(mysql_);
-        if (mysql_) 
-            free(mysql_);
     }
+    if (mysql_) {
+        free(mysql_);
+    }
+    mysql_ = NULL;
 }
 
 
