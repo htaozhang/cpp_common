@@ -9,6 +9,7 @@ set(TESTS
     httpserver_test
     logstream_test
     logging_test
+    lrucache_test
     )
 foreach (test ${TESTS})
     add_executable(${test} ./${test}/${test}.cc)

@@ -13,13 +13,12 @@ MySqlWrapper::MySqlWrapper(const std::string& host,
                            const std::string& passwd,
                            const std::string& db,
                            unsigned port)
-    : host_(host),
+    : connected_(false),
+      host_(host),
       user_(user),
       passwd_(passwd),
       db_(db),
-      port_(port),
-      connected_(false)
-{
+      port_(port) {
     // mysql_init(&mysql_);
 }
 
@@ -80,17 +79,20 @@ std::string MySqlWrapper::ExcapeString(const std::string& field,
     char* tmp = new char[len];
     
     // mysql version: >5.7.*
-    size_t n = LIBMYSQL_VERSION_ID >= 50700 ?
-        mysql_real_escape_string_quote(&mysql_,
-                                       tmp,
-                                       field.c_str(),
-                                       field.length(),
-                                       quote) :
-        mysql_real_escape_string(&mysql_,
-                                 tmp,
-                                 field.c_str(),
-                                 field.length()); /* NO_BACKSLASH_ESCAPES specified, error */
-
+    // size_t n = LIBMYSQL_VERSION_ID >= 50700 ?
+    //     mysql_real_escape_string_quote(&mysql_,
+    //                                    tmp,
+    //                                    field.c_str(),
+    //                                    field.length(),
+    //                                    quote) :
+    //     mysql_real_escape_string(&mysql_,
+    //                              tmp,
+    //                              field.c_str(),
+    //                              field.length()); /* NO_BACKSLASH_ESCAPES specified, error */
+    size_t n = mysql_real_escape_string(&mysql_,
+                                        tmp,
+                                        field.c_str(),
+                                        field.length()); /* NO_BACKSLASH_ESCAPES specified, error */
     // assert(n < len);
     // tmp[n] = '\0'; /* followed by a terminating null byte. */
     answer.assign(tmp, tmp + n);

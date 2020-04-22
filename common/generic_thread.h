@@ -54,7 +54,7 @@ inline const char* get_thread_name() {
     (void)pthread_once(&_pthread_key_once, init_pthread_key_name);
     const char* res = static_cast<const char*>(pthread_getspecific(_pthread_key_name));
     if (res == nullptr) {
-        __thread static char tname[THREADNAME_MAXLEN + 1] = { 0 };
+        static __thread char tname[THREADNAME_MAXLEN + 1] = { 0 };
         
 #ifdef __APPLE__
         uint64_t threadid;

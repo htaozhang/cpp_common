@@ -6,13 +6,12 @@
 #define __GENERIC_TIME_H__
 
 #include "utils.h"
+#include <ctime>
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 #include <iostream>
 #include <sstream>
 #include <iomanip>  // std::get_time
-#include <ctime>
-
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winsock2.h>   // struct timeval
@@ -47,13 +46,10 @@ inline char *strptime(const char *s,
 }
 
 #define timegm _mkgmtime
-
 #define usleep(x) Sleep((x) / 1000)
-
 
 #else
 #include <sys/time.h>
-
 #endif
 
 inline utils::Null<> localtime_r(...)   { return utils::Null<>(); }
