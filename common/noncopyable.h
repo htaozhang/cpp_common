@@ -7,11 +7,11 @@
 
 class NonCopyable {
 public:
-    NonCopyable() {}
-    ~NonCopyable() {}
-private:
-    NonCopyable(const NonCopyable&);
-    NonCopyable& operator=(const NonCopyable&) = delete;
+    NonCopyable(const NonCopyable&) = delete;
+    void operator=(const NonCopyable&) = delete;
+protected:
+    NonCopyable() = default;
+    ~NonCopyable() = default;
 };
 
 #endif /* __NONCOPYABLE_H__ */

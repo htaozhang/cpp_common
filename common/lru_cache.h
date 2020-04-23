@@ -12,8 +12,15 @@
 template<typename KeyT, typename ValueT>
 class LRUCache {
 public:
-    typedef typename std::pair<KeyT, ValueT> key_value_pair_t;
-    typedef typename std::list<key_value_pair_t>::iterator list_iterator_t;
+    struct CacheNode {
+        CacheNode(const KeyT &k, const ValueT &v)
+            : key(k), value(v), last_uptime(0) {
+        }
+        KeyT key;
+        ValueT value;
+        uint32_t last_uptime;
+    };
+    typedef typename std::list<CacheNode>::iterator list_iterator_t;
     typedef typename std::unordered_map<KeyT, list_iterator_t>::iterator map_iterator_t;
 
     LRUCache() : capacity_(1204) {
@@ -31,11 +38,11 @@ public:
             cache_map_.erase(iter);
         }
 
-        cache_list_.emplace_front(key_value_pair_t(key, value));
+        cache_list_.emplace_front(CacheNode{key, value});
         cache_map_[key] = cache_list_.begin();
 
         if (cache_list_.size() > capacity_) {
-            cache_map_.erase(cache_list_.back().first);
+            cache_map_.erase(cache_list_.back().key);
             cache_list_.pop_back();
         }
     }
@@ -47,7 +54,7 @@ public:
         }
 
         cache_list_.splice(cache_list_.begin(), cache_list_, iter->second);
-        value = iter->second->second;
+        value = iter->second->value;
         return 0;
     }
 
@@ -61,7 +68,7 @@ public:
 
 private:
     size_t capacity_;
-    std::list<key_value_pair_t> cache_list_;
+    std::list<CacheNode> cache_list_;
     std::unordered_map<KeyT, list_iterator_t> cache_map_;
 };
 
