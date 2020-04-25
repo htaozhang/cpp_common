@@ -20,7 +20,7 @@ public:
 
     ~BoundedBlockingQueue() = default;
 
-    void Put(const T &one) {
+    void Enqueue(const T &one) {
         std::unique_lock<std::mutex> lock(mutex_);
         not_full_.wait(lock, [&]{ return data_.size() < capacity_; });
         
@@ -28,12 +28,12 @@ public:
         not_empty_.notify_all();
     }
 
-    T Get() {
+    T Dequeue() {
         std::unique_lock<std::mutex> lock(mutex_);
-        no_empty_.wait(lock, [&]{ return data_.size() > 0; });
+        not_empty_.wait(lock, [&]{ return data_.size() > 0; });
         T one(data_.front());
         data_.pop_front();
-        no_full_.notify_all();
+        not_full_.notify_all();
         return one;
     }
 
@@ -51,6 +51,6 @@ private:
     std::mutex mutex_;
     std::condition_variable not_full_;
     std::condition_variable not_empty_;
-    sd::deque<T> data_;
+    std::deque<T> data_;
 };
 #endif /* __BOUNDED_BLOCKING_QUEURE_H__ */

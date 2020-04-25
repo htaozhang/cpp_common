@@ -7,4 +7,5 @@
 /msvc/x64-Debug
 /msvc/x64-Release
 .DS_Store
+.vscode
 /thirdparty/mysql

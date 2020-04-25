@@ -10,6 +10,7 @@
 
 #include <deque>
 #include <mutex>
+#include <condition_variable>
 
 template<typename T>
 class BlockingQueue : public NonCopyable {
@@ -17,15 +18,15 @@ public:
     BlockingQueue() = default;
     ~BlockingQueue() = default;
 
-    void Put(const T &one) {
+    void Enqueue(const T &one) {
         std::unique_lock<std::mutex> lock(mutex_);
         data_.emplace_back(one);
         not_empty_.notify_all();
     }
 
-    T Get() {
+    T Dequeue() {
         std::unique_lock<std::mutex> lock(mutex_);
-        no_empty_.wait(lock, [&]{ return data_.size() > 0; });
+        not_empty_.wait(lock, [&]{ return data_.size() > 0; });
         T one(data_.front());
         data_.pop_front();
         return one;
@@ -38,6 +39,6 @@ public:
 private:
     std::mutex mutex_;
     std::condition_variable not_empty_;
-    sd::deque<T> data_;
+    std::deque<T> data_;
 };
 #endif /* __BLOCKING_QUEURE_H__ */

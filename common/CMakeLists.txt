@@ -8,6 +8,8 @@ set(COMMON_SOURCES
     mysql_wrapper.cc
     #redis_wrapper.cc
     time_wrapper.cc
+    thread.cc
+    thread_pool.cc
     )
 
 ADD_LIBRARY(common STATIC ${COMMON_SOURCES})

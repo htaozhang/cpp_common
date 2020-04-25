@@ -24,11 +24,15 @@ public:
     typedef typename std::unordered_map<KeyT, list_iterator_t>::iterator map_iterator_t;
 
     LRUCache() : capacity_(1204) {
+    }
+
+    explicit LRUCache(size_t capacity)
+        : capacity_(capacity) {
 
     }
 
-    LRUCache(size_t capacity) : capacity_(capacity) {
-
+    void SetMaxCapacity(size_t capacity) {
+        capacity_ = capacity;
     }
 
     void Put(const KeyT &key, const ValueT &value) {

@@ -10,6 +10,8 @@ set(TESTS
     logstream_test
     logging_test
     lrucache_test
+    blockingqueue_test
+    threadpool_test
     )
 foreach (test ${TESTS})
     add_executable(${test} ./${test}/${test}.cc)
