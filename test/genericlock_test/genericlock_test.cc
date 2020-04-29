@@ -27,11 +27,15 @@ TEST(GenericLock, Mutex) {
 TEST(GenericLock, SpinByTAS) {
     {
         for (int i = 0; i < 8; i++) {
-            
+
         }
     }
 }
 
 TEST(GenericLock, SpinByCAS) {
-
+    {
+        for (int i = 0; i < 8; i++) {
+            
+        }
+    }
 }
