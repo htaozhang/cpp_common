@@ -6,21 +6,18 @@
 
 Thread::Thread(ThreadFunc thread_func, const std::string &thread_name)
     : started_(false),
-      joined_(false),
       thread_func_(thread_func),
       name_(thread_name) {
 }
 
 Thread::~Thread() {
-    if (started_ && !joined_) {
-        thread_.detach();
-    }
-    std::cout << "done Thread::~Thread" << std::endl;
+    detach();
+    // std::cout << "done Thread::~Thread" << std::endl;
 }
 
-std::thread::id Thread::get_id() {
-    return thread_.get_id();
-}
+// std::thread::id Thread::get_id() {
+//     return thread_.get_id();
+// }
 
 void Thread::start() {
     started_ = true;
@@ -28,12 +25,15 @@ void Thread::start() {
 }
 
 void Thread::join() {
-    joined_ = true;
-    thread_.join();
+    if (started_ && thread_.joinable()) {
+        thread_.join();
+    }
 }
 
 void Thread::detach() {
-    thread_.detach();
+    if (started_ && thread_.joinable()) {
+        thread_.detach();
+    }
 }
 
 void Thread::swap(std::thread &other) {

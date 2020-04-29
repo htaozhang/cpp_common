@@ -17,7 +17,7 @@ ThreadPool::~ThreadPool() {
     if (running_) {
         Stop();
     }
-    std::cout << "done ThreadPool::~ThreadPool" << std::endl;
+    // std::cout << "done ThreadPool::~ThreadPool" << std::endl;
 }
 
 void ThreadPool::SetMaxQueueSize(size_t size) {

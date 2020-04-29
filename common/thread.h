@@ -18,7 +18,7 @@ public:
     explicit Thread(ThreadFunc thread_func,
                     const std::string &thread_name = std::string());
     ~Thread();
-    std::thread::id get_id();
+    // std::thread::id get_id();
     void start();
     void join();
     void detach();
@@ -27,7 +27,6 @@ public:
 
 private:
     bool started_;
-    bool joined_;
     ThreadFunc thread_func_;
     std::string name_;
 
