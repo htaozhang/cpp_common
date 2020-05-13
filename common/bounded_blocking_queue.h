@@ -14,7 +14,7 @@
 template<typename T>
 class BoundedBlockingQueue : public NonCopyable {
 public:
-    BoundedBlockingQueue(int capaticy)
+    BoundedBlockingQueue(size_t capaticy)
         : capacity_(capaticy) {
     }
 
@@ -47,7 +47,7 @@ public:
         return capacity_;
     }
 private:
-    int capacity_;
+    size_t capacity_;
     std::mutex mutex_;
     std::condition_variable not_full_;
     std::condition_variable not_empty_;
