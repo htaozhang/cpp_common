@@ -11,11 +11,13 @@ template<typename T>
 class Singleton : public NonCopyable {
 public:
     static T& Instance() {
+        pthread_once(&ponce_, &Singleton::Init);
         assert(value_ != nullptr);
         return *value_;
     }
 
     static void Init() {
+        value_ = new T();
     }
 
 private:
