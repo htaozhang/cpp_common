@@ -16,6 +16,8 @@
 
 #include "generic_socket.h"
 
+const char* kCRLF = "\r\n";
+
 class HttpRequest {
 public:
     enum Version { kUnknown, kHttp10, kHttp11 };

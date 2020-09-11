@@ -78,25 +78,18 @@ std::string MySqlWrapper::ExcapeString(const std::string& field,
     size_t len = field.length() * 2 + 1;
     char* tmp = new char[len];
     
+#if LIBMYSQL_VERSION_ID > 50700
     // mysql version: >5.7.*
-    // size_t n = LIBMYSQL_VERSION_ID >= 50700 ?
-    //     mysql_real_escape_string_quote(&mysql_,
-    //                                    tmp,
-    //                                    field.c_str(),
-    //                                    field.length(),
-    //                                    quote) :
-    //     mysql_real_escape_string(&mysql_,
-    //                              tmp,
-    //                              field.c_str(),
-    //                              field.length()); /* NO_BACKSLASH_ESCAPES specified, error */
-    size_t n = mysql_real_escape_string(&mysql_,
-                                        tmp,
-                                        field.c_str(),
-                                        field.length()); /* NO_BACKSLASH_ESCAPES specified, error */
+    size_t n = mysql_real_escape_string_quote(&mysql_, tmp, field.c_str(), field.length(), quote);
+#else
+    // NO_BACKSLASH_ESCAPES specified, error
+    size_t n = mysql_real_escape_string(&mysql_, tmp, field.c_str(), field.length());
+#endif
+
     // assert(n < len);
     // tmp[n] = '\0'; /* followed by a terminating null byte. */
     answer.assign(tmp, tmp + n);
-    delete tmp;
+    delete[] tmp;
     return answer;
 }
 

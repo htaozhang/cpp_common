@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		93384573250B2F9100AF0009 /* libcommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93A8D56D1FC128BE00945420 /* libcommon.a */; };
+		93384574250B2F9A00AF0009 /* libcommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93A8D56D1FC128BE00945420 /* libcommon.a */; };
 		93A8D5711FC1295F00945420 /* http_server.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9356C6B01FACBF2700AD989B /* http_server.cc */; };
 		93A8D5721FC1297100945420 /* time_wrapper.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9356C6B11FACBF2700AD989B /* time_wrapper.cc */; };
 		93A8D5731FC1297600945420 /* log_stream.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9356C6B21FACBF2700AD989B /* log_stream.cc */; };
@@ -70,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93384573250B2F9100AF0009 /* libcommon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93384574250B2F9A00AF0009 /* libcommon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,6 +226,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 9356C6991FACBBCE00AD989B;
